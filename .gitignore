@@ -1,0 +1,20 @@
+# Created by venv; see https://docs.python.org/3/library/venv.html
+*# Ambiente Virtual
+venv/
+env/
+.venv/
+
+# Cache do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Banco de dados local
+*.sqlite3
+
+# Arquivos de mídia/uploads pesados (opcional)
+media/
+
+# VS Code / IDEs
+.vscode/
+.idea/
