@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avalonet - Acesso ao Multiverso</title>
+    <style>
+        :root { --theme-color: #bb86fc; }
+        body { 
+            background-color: #121212; 
+            color: #e0e0e0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        .login-card {
+            background-color: #1e1e1e;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.5);
+            border: 1px solid #333;
+            width: 100%;
+            max-width: 350px;
+            text-align: center;
+            position: relative;
+        }
+        .login-card h1 {
+            margin-top: 0;
+            color: var(--theme-color);
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #888; 
+            font-size: 14px; 
+            margin-bottom: 25px;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            background-color: #2c2c2c;
+            color: white;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 12px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+        input:focus { outline: none; border-color: var(--theme-color); }
+        button {
+            width: 100%;
+            background-color: var(--theme-color); 
+            color: #000;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: filter 0.2s;
+            margin-top: 5px;
+        }
+        button:hover { filter: brightness(1.2); }
+        
+        .mensagem-erro { color: #cf6679; font-size: 13px; margin-top: 15px; display: none; font-weight: bold; }
+        .mensagem-sucesso { color: #03dac6; font-size: 13px; margin-top: 15px; display: none; font-weight: bold; }
+
+        .toggle-link {
+            display: block;
+            margin-top: 20px;
+            color: #aaa;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .toggle-link:hover { color: var(--theme-color); }
+
+        /* Esconde o form de cadastro por padrão */
+        #form-cadastro { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="login-card">
+        <h1>Avalonet</h1>
+        <p class="subtitle" id="titulo-form">Acesse sua conta para continuar</p>
+        
+        <!-- FORMULÁRIO DE LOGIN -->
+        <div id="form-login">
+            <input type="text" id="username-login" placeholder="Nome de Usuário">
+            <input type="password" id="password-login" placeholder="Senha" onkeypress="if(event.key === 'Enter') fazerLogin()">
+            
+            <button onclick="fazerLogin()">Entrar</button>
+            <p id="erro-login" class="mensagem-erro">Usuário ou senha incorretos.</p>
+            <p id="sucesso-login" class="mensagem-sucesso">Conta criada! Faça o login.</p>
+            
+            <span class="toggle-link" onclick="alternarForms('cadastro')">Não possui uma conta? Cadastre-se</span>
+        </div>
+
+        <!-- FORMULÁRIO DE CADASTRO -->
+        <div id="form-cadastro">
+            <input type="text" id="username-cadastro" placeholder="Escolha um Nome de Usuário">
+            <input type="password" id="password-cadastro" placeholder="Crie uma Senha Forte">
+            <input type="password" id="password-confirm" placeholder="Confirme a Senha" onkeypress="if(event.key === 'Enter') fazerCadastro()">
+            
+            <button onclick="fazerCadastro()">Criar Conta</button>
+            <p id="erro-cadastro" class="mensagem-erro"></p>
+            
+            <span class="toggle-link" onclick="alternarForms('login')">Já tem uma conta? Entre aqui</span>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin + '/api/';
+
+        function alternarForms(tela) {
+            const formLogin = document.getElementById('form-login');
+            const formCadastro = document.getElementById('form-cadastro');
+            const titulo = document.getElementById('titulo-form');
+            
+            // Limpa as mensagens de erro
+            document.getElementById('erro-login').style.display = 'none';
+            document.getElementById('erro-cadastro').style.display = 'none';
+            document.getElementById('sucesso-login').style.display = 'none';
+
+            if (tela === 'cadastro') {
+                formLogin.style.display = 'none';
+                formCadastro.style.display = 'block';
+                titulo.innerText = 'Junte-se ao Nexus Multiverso';
+            } else {
+                formCadastro.style.display = 'none';
+                formLogin.style.display = 'block';
+                titulo.innerText = 'Acesse sua conta para continuar';
+            }
+        }
+
+        function fazerLogin() {
+            const user = document.getElementById('username-login').value;
+            const pass = document.getElementById('password-login').value;
+            const msgErro = document.getElementById('erro-login');
+            const msgSucesso = document.getElementById('sucesso-login');
+            
+            msgErro.style.display = 'none';
+            msgSucesso.style.display = 'none';
+
+            if (!user || !pass) {
+                msgErro.innerText = "Preencha todos os campos.";
+                msgErro.style.display = 'block';
+                return;
+            }
+
+            fetch(API_BASE + 'login/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: user, password: pass })
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Falha no login');
+                return response.json();
+            })
+            .then(data => {
+                localStorage.setItem('avalonet_token', data.token);
+                window.location.href = '/'; 
+            })
+            .catch(error => {
+                msgErro.innerText = "Usuário ou senha incorretos.";
+                msgErro.style.display = 'block';
+            });
+        }
+
+        function fazerCadastro() {
+            const user = document.getElementById('username-cadastro').value;
+            const pass = document.getElementById('password-cadastro').value;
+            const confirmPass = document.getElementById('password-confirm').value;
+            const msgErro = document.getElementById('erro-cadastro');
+            
+            msgErro.style.display = 'none';
+
+            if (!user || !pass || !confirmPass) {
+                msgErro.innerText = "Preencha todos os campos.";
+                msgErro.style.display = 'block';
+                return;
+            }
+
+            if (pass !== confirmPass) {
+                msgErro.innerText = "As senhas não coincidem.";
+                msgErro.style.display = 'block';
+                return;
+            }
+
+            if (pass.length < 8) {
+                msgErro.innerText = "A senha deve ter pelo menos 8 caracteres.";
+                msgErro.style.display = 'block';
+                return;
+            }
+
+            fetch(API_BASE + 'register/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: user, password: pass })
+            })
+            .then(async response => {
+                if (!response.ok) {
+                    const data = await response.json();
+                    if (data.username) throw new Error("Esse nome de usuário já está em uso.");
+                    throw new Error("Erro ao criar a conta. Tente outra senha.");
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Sucesso no cadastro! Volta para a tela de login e preenche o usuário
+                document.getElementById('username-login').value = user;
+                document.getElementById('password-login').value = "";
+                alternarForms('login');
+                document.getElementById('sucesso-login').style.display = 'block';
+            })
+            .catch(error => {
+                msgErro.innerText = error.message;
+                msgErro.style.display = 'block';
+            });
+        }
+    </script>
+</body>
+</html>

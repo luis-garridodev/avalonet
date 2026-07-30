@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avalonet - Nexus Multiverso</title>
+    <style>
+        :root { --theme-color: #bb86fc; }
+
+        body { 
+            background-color: #000; color: #e0e0e0; 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            margin: 0; padding: 0; display: flex; flex-direction: column; align-items: center; 
+        }
+
+        .top-bar { 
+            background-color: rgba(30, 30, 30, 0.95); backdrop-filter: blur(10px); 
+            width: 100%; max-width: 600px; padding: 12px 15px; box-sizing: border-box; 
+            display: flex; align-items: center; justify-content: space-between; gap: 10px; 
+            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #333; 
+        }
+        .top-bar-left { display: flex; flex-direction: column; flex-grow: 1; }
+        .top-bar select { 
+            background-color: #2c2c2c; color: white; border: 1px solid #444; padding: 10px 12px; 
+            border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 5px; width: 100%; font-size: 16px; 
+        }
+        .top-bar-buttons { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+
+        .card { 
+            background-color: #121212; width: 100%; max-width: 600px; 
+            border-bottom: 10px solid #000; box-sizing: border-box; overflow: hidden; 
+        }
+        .card-content { padding: 20px 15px; }
+
+        .cover-photo { width: 100%; height: 160px; background-color: #2c2c2c; background-size: cover; background-position: center; position: relative; }
+        .cover-gradient { position: absolute; bottom: 0; width: 100%; height: 100%; background: linear-gradient(to top, #121212 2%, transparent 100%); }
+        
+        .profile-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-top: -60px; position: relative; z-index: 2; }
+        .profile-header img.avatar { width: 110px; height: 110px; border-radius: 50%; object-fit: cover; border: 4px solid #121212; box-shadow: 0 0 15px var(--theme-color); margin-bottom: 10px; background-color: #121212; }
+        .badges-container { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin: 15px 0; }
+        .badge { background-color: transparent; color: var(--theme-color); padding: 5px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; border: 1px solid var(--theme-color); text-transform: uppercase; }
+        .badge.solid { background-color: var(--theme-color); color: #000; }
+        
+        .follow-stats { display: flex; gap: 15px; font-size: 13px; color: #aaa; margin-top: 5px; }
+        .follow-stats span { cursor: pointer; transition: color 0.2s; }
+        .follow-stats span:hover { color: var(--theme-color); }
+        .follow-stats strong { color: white; }
+        
+        hr { border-color: #222; margin: 20px 0; }
+        
+        input[type="text"], input[type="number"], textarea { width: 100%; background-color: #222; color: white; border: 1px solid #444; border-radius: 8px; padding: 14px; box-sizing: border-box; margin-bottom: 15px; font-size: 16px; }
+        input:disabled, button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        button.btn-primary { background-color: var(--theme-color); color: #000; border: none; padding: 14px 20px; border-radius: 25px; font-weight: bold; font-size: 15px; cursor: pointer; width: 100%; transition: opacity 0.2s; }
+        button.btn-primary:active { opacity: 0.7; }
+        button.btn-small { padding: 10px 15px; width: auto; font-size: 13px; border-radius: 8px; }
+        .btn-outline { background-color: transparent; color: var(--theme-color); border: 2px solid var(--theme-color); padding: 10px 20px; border-radius: 25px; font-weight: bold; cursor: pointer; }
+        .btn-logout { background-color: transparent; color: #cf6679; border: 1px solid #cf6679; padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: bold; }
+
+        .theme-selector { display: flex; align-items: center; justify-content: space-between; background: #222; padding: 10px 15px; border-radius: 8px; margin-bottom: 15px; }
+        input[type="color"] { border: none; width: 40px; height: 40px; border-radius: 5px; background: transparent; }
+        
+        .modal { display: none; position: fixed; z-index: 999; left: 0; top: 0; width: 100%; height: 100%; background-color: #121212; overflow-y: auto; }
+        .modal-content { max-width: 600px; width: 100%; margin: auto; padding: 20px; padding-bottom: 60px; box-sizing: border-box; position: relative; }
+        .fechar-modal { position: absolute; right: 20px; top: 15px; font-size: 35px; cursor: pointer; color: #fff; font-weight: bold; text-shadow: 0 0 10px black; z-index: 10; }
+
+        .post-item { background-color: #1e1e1e; border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #2a2a2a; }
+        .post-header { display: flex; align-items: center; margin-bottom: 12px; }
+        .post-header img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--theme-color); margin-right: 12px; cursor: pointer; }
+        .post-header strong { cursor: pointer; display: block; }
+        .post-header strong:hover { color: var(--theme-color); text-decoration: underline; }
+        .post-content { font-size: 15px; line-height: 1.5; color: #e0e0e0; white-space: pre-wrap; margin-bottom: 10px; }
+        .post-image { width: 100%; border-radius: 8px; margin-top: 5px; border: 1px solid #333; }
+        .post-date { font-size: 12px; color: #888; }
+        
+        .interact-bar { display: flex; justify-content: space-between; margin-top: 15px; border-top: 1px solid #333; padding-top: 12px; }
+        .btn-action { background: transparent; border: none; color: #888; font-size: 15px; font-weight: bold; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        .btn-action.liked { color: #cf6679; }
+        .btn-action:hover { color: var(--theme-color); }
+        
+        .comments-section { margin-top: 15px; background: #121212; padding: 12px; border-radius: 8px; }
+        .comment-item { display: flex; gap: 10px; margin-bottom: 12px; font-size: 14px; border-bottom: 1px solid #222; padding-bottom: 12px; }
+        .comment-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+        .comment-item img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; cursor: pointer; }
+        .comment-item strong { cursor: pointer; }
+        .comment-item strong:hover { color: var(--theme-color); }
+        
+        .comment-actions { display: flex; gap: 15px; margin-top: 6px; font-size: 12px; }
+        .comment-btn { color: #888; cursor: pointer; font-weight: bold; }
+        .comment-btn.liked { color: #cf6679; }
+        .comment-btn:hover { color: var(--theme-color); }
+
+        .replies-section { margin-top: 12px; border-left: 2px solid #333; padding-left: 10px; }
+        .reply-item { display: flex; gap: 8px; margin-bottom: 10px; font-size: 13.5px; }
+        .reply-item img { width: 26px; height: 26px; border-radius: 50%; object-fit: cover; cursor: pointer; }
+        
+        .comment-box { display: flex; gap: 10px; margin-top: 10px; }
+        .comment-box input { margin-bottom: 0; padding: 10px; font-size: 14px; }
+        
+        .search-result-item { display: flex; align-items: center; background: #222; padding: 10px; border-radius: 8px; margin-top: 8px; border: 1px solid transparent; cursor: pointer; }
+        .search-result-item:hover { border-color: var(--theme-color); }
+        .search-result-item img { width: 45px; height: 45px; border-radius: 6px; margin-right: 12px; }
+
+        .msg-bubble { max-width: 75%; padding: 10px 15px; border-radius: 15px; font-size: 14.5px; line-height: 1.4; word-wrap: break-word; }
+        .msg-sent { background-color: var(--theme-color); color: #000; align-self: flex-end; border-bottom-right-radius: 2px; }
+        .msg-received { background-color: #2c2c2c; color: #fff; align-self: flex-start; border-bottom-left-radius: 2px; border: 1px solid #444; }
+
+        @media (min-width: 650px) {
+            body { padding: 20px; background-color: #121212; }
+            .top-bar, .card { border-radius: 12px; border: 1px solid #333; }
+            .modal { background-color: rgba(0,0,0,0.8); display: none; align-items: center; justify-content: center; }
+            .modal-content { background-color: #1e1e1e; border-radius: 12px; height: auto; max-height: 90vh; top: auto; border: 1px solid #333; padding: 0; overflow: hidden; overflow-y: auto; }
+            #modal-nova-persona .modal-content, #modal-editar-persona .modal-content, #modal-lista-usuarios .modal-content, #modal-inbox .modal-content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <span style="font-size: 12px; color: #888;">Persona Ativa:</span>
+            <select id="seletor-personagens" onchange="trocarPersonagemAtivo(this.value)">
+                <option value="">Carregando...</option>
+            </select>
+        </div>
+        <div class="top-bar-buttons">
+            <!-- BOTÃO APOIAR (Sem Premium) -->
+            <button class="btn-primary btn-small" onclick="abrirModalDoacao()" style="background: linear-gradient(45deg, #ff7e5f, #feb47b); color: white; border: none; font-weight: bold; box-shadow: 0 0 10px rgba(255, 126, 95, 0.5);">☕ Apoiar Projeto</button>
+            
+            <button class="btn-outline btn-small" onclick="abrirNotificacoes()" style="border-color: #888; color: #e0e0e0; position: relative;">
+                🔔 <span id="badge-notificacoes" style="display: none; position: absolute; top: -5px; right: -5px; background: #cf6679; color: white; border-radius: 50%; padding: 2px 6px; font-size: 10px; font-weight: bold;">0</span>
+            </button>
+            <button class="btn-outline btn-small" onclick="abrirInbox()" style="border-color: #888; color: #e0e0e0;">📥 Inbox</button>
+            <button class="btn-primary btn-small" onclick="abrirModalNovaPersona()">+ Nova Persona</button>
+            <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+        </div>
+    </div>
+
+    <!-- NOVA BARRA DE PESQUISA FLUTUANTE -->
+    <div style="position: relative; width: 100%; max-width: 600px; margin: 15px auto 10px auto; padding: 0 15px; box-sizing: border-box;">
+        <input type="text" id="searchInput" placeholder="🔍 Buscar personagens no multiverso..." onkeyup="buscarPerfis()" style="margin-bottom: 0; border-radius: 25px; text-align: center; width: 100%; background-color: #222;">
+        
+        <div id="searchResults" style="position: absolute; top: 100%; left: 15px; right: 15px; background: #1e1e1e; border-radius: 12px; margin-top: 5px; display: none; border: 1px solid #333; max-height: 300px; overflow-y: auto; box-shadow: 0 10px 20px rgba(0,0,0,0.9); z-index: 9999;"></div>
+    </div>
+
+    <!-- MODAL DE NOTIFICAÇÕES -->
+    <div id="modal-notificacoes" class="modal">
+        <div class="card modal-content">
+            <span class="fechar-modal" onclick="fecharNotificacoes()">&times;</span>
+            <h3 style="margin-top: 0; color: var(--theme-color);">🔔 Notificações</h3>
+            <div id="conteudo-notificacoes" style="max-height: 60vh; overflow-y: auto;">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL INBOX -->
+    <div id="modal-inbox" class="modal">
+        <div class="card modal-content">
+            <span class="fechar-modal" onclick="fecharInbox()">&times;</span>
+            <h3 style="margin-top: 0; color: var(--theme-color);">📥 Caixa de Entrada</h3>
+            <div id="conteudo-inbox">
+                <!-- Preenchido via JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL NOVA PERSONA -->
+    <div id="modal-nova-persona" class="modal">
+        <div class="card modal-content">
+            <span class="fechar-modal" onclick="fecharModalNovaPersona()">&times;</span>
+            <h3 style="margin-top: 0; color: var(--theme-color);">✨ Criar Nova Persona</h3>
+            <form id="form-criar-persona" onsubmit="enviarNovaPersona(event)">
+                <input type="text" id="nova-nome" placeholder="Nome da Persona" required>
+                <label style="font-size: 12px; color: #888; display: block;">Foto de Perfil (Avatar):</label>
+                <input type="file" id="nova-avatar" accept="image/*" style="margin-bottom: 15px; color: white;">
+                <label style="font-size: 12px; color: #888; display: block;">Imagem de Capa (Banner):</label>
+                <input type="file" id="nova-capa" accept="image/*" style="margin-bottom: 15px; color: white;">
+                <input type="text" id="nova-especie" placeholder="Raça / Espécie" required>
+                <input type="text" id="nova-localizacao" placeholder="Localização" required>
+                <input type="number" id="nova-idade" placeholder="Idade (apenas números)" required>
+                <input type="text" id="nova-pronomes" placeholder="Pronomes (ex: Ele/Dele)" required>
+                <input type="text" id="nova-sexualidade" placeholder="Sexualidade" required>
+                <textarea id="nova-bio" placeholder="História / Lore..." rows="4" required></textarea>
+                <button type="submit" class="btn-primary" style="width: 100%;">Invocar Persona</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL EDITAR PERSONA -->
+    <div id="modal-editar-persona" class="modal">
+        <div class="card modal-content">
+            <span class="fechar-modal" onclick="fecharModalEditarPersona()">&times;</span>
+            <h3 style="margin-top: 0; color: var(--theme-color);">✏️ Editar Persona</h3>
+            <form id="form-editar-persona" onsubmit="salvarEdicaoPersona(event)">
+                <input type="text" id="edit-nome" placeholder="Nome da Persona" required>
+                
+                <label style="font-size: 12px; color: #888; display: block;">Nova Foto de Perfil (Opcional):</label>
+                <input type="file" id="edit-avatar" accept="image/*" style="margin-bottom: 15px; color: white;">
+                
+                <label style="font-size: 12px; color: #888; display: block;">Nova Imagem de Capa (Opcional):</label>
+                <input type="file" id="edit-capa" accept="image/*" style="margin-bottom: 15px; color: white;">
+                
+                <input type="text" id="edit-especie" placeholder="Raça / Espécie" required>
+                <input type="text" id="edit-localizacao" placeholder="Localização" required>
+                <input type="number" id="edit-idade" placeholder="Idade (apenas números)" required>
+                <input type="text" id="edit-pronomes" placeholder="Pronomes (ex: Ele/Dele)" required>
+                <input type="text" id="edit-sexualidade" placeholder="Sexualidade" required>
+                
+                <label style="font-size: 12px; color: #888; display: block;">Fonte do Texto (RP Premium):</label>
+                <select id="edit-font" style="background-color: #222; color: white; border: 1px solid #444; padding: 14px; border-radius: 8px; width: 100%; margin-bottom: 15px; font-size: 15px;">
+                    <option value="sans-serif">Padrão (Moderna)</option>
+                    <option value="'Courier New', monospace">Máquina de Escrever (Courier)</option>
+                    <option value="Georgia, serif">Elegante (Georgia Serif)</option>
+                    <option value="'Brush Script MT', cursive">Manuscrita / Carta (Cursive)</option>
+                    <option value="Impact, sans-serif">Impacto / Alerta (Impact)</option>
+                </select>
+
+                <textarea id="edit-bio" placeholder="História / Lore..." rows="4" required></textarea>
+                <button type="submit" class="btn-primary" style="width: 100%;">Salvar Alterações</button>
+
+                <!-- BOTÃO DE APAGAR -->
+                <hr style="border-color: #333; margin: 20px 0;">
+                <button type="button" class="btn-outline" style="border-color: #cf6679; color: #cf6679; width: 100%;" onclick="apagarPersonaAtiva()">🗑️ Apagar Persona</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL PERFIL PÚBLICO -->
+    <div id="modal-perfil-publico" class="modal">
+        <div class="card modal-content" style="padding: 0;">
+            <span class="fechar-modal" onclick="fecharModalPerfilPublico()">&times;</span>
+            <div id="conteudo-perfil-publico"></div>
+        </div>
+    </div>
+
+    <!-- MODAL DE LISTA -->
+    <div id="modal-lista-usuarios" class="modal">
+        <div class="card modal-content">
+            <span class="fechar-modal" onclick="fecharModalListaUsuarios()">&times;</span>
+            <h3 id="titulo-lista-usuarios" style="margin-top: 0; color: var(--theme-color);">Lista</h3>
+            <div id="conteudo-lista-usuarios"></div>
+        </div>
+    </div>
+    
+    <!-- MODAL DO CHAT -->
+    <div id="modal-chat" class="modal" style="z-index: 1000;">
+        <div class="card modal-content" style="padding:0; display:flex; flex-direction:column; height:85vh; overflow:hidden;">
+            <div style="background: #1e1e1e; padding: 15px; border-bottom: 1px solid #333; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <img id="chat-target-avatar" src="" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border: 2px solid var(--theme-color);">
+                    <h3 id="chat-target-name" style="margin:0; color:white;">Nome</h3>
+                </div>
+                <span style="font-size:28px; cursor:pointer; color:#888; font-weight:bold;" onclick="fecharChat()">&times;</span>
+            </div>
+            <div id="chat-messages" style="flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:12px; background:#121212;"></div>
+            <div style="background: #1e1e1e; padding: 15px; border-top: 1px solid #333; display:flex; gap:10px; flex-shrink:0; align-items:center;">
+                <input type="text" id="chat-input" placeholder="Digite uma mensagem..." style="margin-bottom:0; flex-grow:1; width:auto;" onkeypress="if(event.key === 'Enter') enviarMensagemDireta()">
+                <button id="btn-enviar-chat" class="btn-primary" style="width:auto; padding: 0 25px; height:45px;" onclick="enviarMensagemDireta()">Enviar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DOAÇÃO / CAFEZINHO -->
+    <div id="modal-doacao" class="modal">
+        <div class="card modal-content" style="text-align: center; max-width: 450px;">
+            <span class="fechar-modal" onclick="fecharModalDoacao()">&times;</span>
+            <h2 style="margin-top: 0; color: #ff7e5f; font-size: 24px;">☕ Pague um Café pro Dev</h2>
+            <p style="color: #ccc; font-size: 14.5px; line-height: 1.6; margin-bottom: 20px;">
+                A Avalonet é um projeto feito de fã para fãs. Manter os servidores rodando e programar madrugada afora exige bastante energia (e cafeína)! 
+            </p>
+            
+            <div style="background: #181818; padding: 20px; border-radius: 12px; border: 1px dashed #ff7e5f; margin-bottom: 25px; text-align: center;">
+                <h3 style="margin-top: 0; color: white;">Apoio Livre ❤️</h3>
+                <p style="color: #aaa; font-size: 14px; line-height: 1.6; margin-bottom: 0;">
+                    Qualquer valor é bem-vindo, sem compromisso e sem cobranças mensais. Seja 1 real ou 100 reais, toda ajuda vai direto para o fundo de café e para pagar os custos de servidor dessa versão Alpha!
+                </p>
+            </div>
+
+            <p style="margin-bottom: 5px; color: white; font-weight: bold;">Sua contribuição via PIX:</p>
+            <input type="text" value="a9c836c7-bfea-4ecd-a885-f3acab866ded" id="chave-pix-input" readonly style="text-align: center; font-size: 13px; font-weight: bold; color: var(--theme-color); background: #222; border: 1px solid #444;">
+            
+            <button class="btn-primary" onclick="copiarPix()" style="width: 100%; background: linear-gradient(45deg, #ff7e5f, #feb47b); color: white; font-size: 16px; padding: 15px; margin-top: 10px;">📋 Copiar Chave PIX</button>
+            <p id="msg-pix-copiado" style="display: none; color: #03dac6; font-size: 13px; font-weight: bold; margin-top: 10px;">Chave copiada com sucesso!</p>
+        </div>
+    </div>
+
+    <h2 id="status-api">Acessando o Multiverso... ⏳</h2>
+
+    <!-- PERFIL ATIVO -->
+    <div id="perfil-personagem" class="card" style="display: none;"></div>
+
+    <!-- CONFIGURAÇÕES -->
+    <div class="card" id="area-config" style="display: none;">
+        <div class="card-content">
+            <h3>⚙️ Configurações da Persona</h3>
+            <button class="btn-outline" onclick="abrirModalEditarPersona()" style="width: 100%; margin-bottom: 20px; border-style: dashed;">✏️ Editar Informações (Lore, Status, etc)</button>
+            <hr>
+            <h3>🎨 Personalizar Cores</h3>
+            <div class="theme-selector">
+                <span>Cor do Tema:</span>
+                <input type="color" id="input-cor-tema" onchange="alterarCorTema(this.value)">
+            </div>
+            <button class="btn-primary" onclick="salvarCorTema()" style="width: 100%; margin-bottom: 20px;">Salvar Cor</button>
+            <hr>
+            <h3>🎵 Música Tema do Perfil</h3>
+            <input type="text" id="input-busca-spotify" placeholder="Digite o nome da música ou banda...">
+            <button class="btn-primary" onclick="buscarNoSpotify()">Pesquisar</button>
+            <div id="resultados-spotify"></div>
+        </div>
+    </div>
+
+    <!-- PUBLICAÇÃO E FEED -->
+    <div class="card" id="area-postagem" style="display: none;">
+        <div class="card-content">
+            <h3 id="titulo-postagem">Compartilhe uma ação ou pensamento...</h3>
+            <textarea id="texto-post" placeholder="Escreva algo..." rows="3"></textarea>
+            <label style="font-size: 12px; color: #888; display: block;">Anexar Imagem (Opcional):</label>
+            <input type="file" id="imagem-post" accept="image/*" style="margin-bottom: 10px; color: white;">
+            <label style="font-size: 12px; color: #888; display: block; margin-top: 10px;">🎵 Trilha Sonora do Post (Opcional):</label>
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="text" id="input-busca-spotify-post" placeholder="Buscar música ou artista..." style="margin-bottom: 0;">
+                <button class="btn-primary btn-small" onclick="buscarNoSpotifyPost()">Buscar</button>
+            </div>
+            <div id="resultados-spotify-post"></div>
+            <div id="musica-selecionada-post" style="margin-bottom: 15px; color: var(--theme-color); font-size: 13px; font-weight: bold;"></div>
+            <button class="btn-primary" onclick="enviarPost()" style="width: 100%;">Publicar no Feed</button>
+            <p id="status-post" style="font-size: 13px; margin-top: 10px; text-align: center;"></p>
+            <hr>
+            <h3 id="titulo-feed">🌌 Feed</h3>
+            <div id="lista-posts">
+                <p style="color: #888; font-size: 13px;">Carregando publicações...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        const API_BASE = window.location.origin + '/api/';
+        const API_CHARACTERS = API_BASE + 'characters/';
+        const API_POSTS = API_BASE + 'posts/';
+        const API_COMMENTS = API_BASE + 'comments/';
+        const API_SPOTIFY_SEARCH = API_BASE + 'spotify/search/?q=';
+        const API_MESSAGES = API_BASE + 'messages/';
+        const API_REPORTS = API_BASE + 'reports/'; 
+        const API_NOTIFICATIONS = API_BASE + 'notifications/'; 
+
+        const token = localStorage.getItem('avalonet_token');
+        if (!token) window.location.href = '/login.html'; 
+
+        const headersAuth = { 'Content-Type': 'application/json', 'Authorization': 'Token ' + token };
+        const headersUpload = { 'Authorization': 'Token ' + token };
+
+        let listaPersonagens = [];
+        let personagemAtivo = null;
+        let musicaPostAtual = ""; 
+        let chatTargetId = null; 
+        let enviandoMensagemChat = false;
+
+        function formatarUrlImagem(url) {
+            if (!url) return 'https://via.placeholder.com/130/121212/888888?text=?';
+            return url.startsWith('http') ? url : window.location.origin + url;
+        }
+
+        function fazerLogout() { 
+            localStorage.removeItem('avalonet_token'); 
+            window.location.href = '/login.html'; 
+        }
+
+        function buscarPerfis() {
+            const query = document.getElementById('searchInput').value;
+            const resultsDiv = document.getElementById('searchResults');
+
+            if (query.length < 2) {
+                resultsDiv.style.display = 'none';
+                return;
+            }
+
+            fetch(`${API_CHARACTERS}?search=${encodeURIComponent(query)}`, {
+                headers: headersAuth
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultsDiv.innerHTML = '';
+                const lista = Array.isArray(data) ? data : data.results;
+
+                if (lista && lista.length > 0) {
+                    resultsDiv.style.display = 'block';
+                    lista.forEach(char => {
+                        const avatarStr = formatarUrlImagem(char.avatar);
+                        resultsDiv.innerHTML += `
+                            <div class="search-result-item" style="justify-content: space-between; border-bottom: 1px solid #222; border-radius: 0; margin-top:0; padding: 15px;">
+                                <div style="display: flex; align-items: center; cursor: pointer;" onclick="fecharBuscaEAbrirPerfil(${char.id})">
+                                    <img src="${avatarStr}" style="width: 45px; height: 45px; border-radius: 50%; margin-right: 15px; object-fit: cover;">
+                                    <div>
+                                        <strong style="color: white; font-size: 15px;">${char.name}</strong><br>
+                                        <small style="color: var(--theme-color); font-weight: bold;">${char.species}</small>
+                                    </div>
+                                </div>
+                                <button class="btn-primary btn-small" onclick="fecharBuscaEAbrirPerfil(${char.id})" style="width: auto;">Ver</button>
+                            </div>
+                        `;
+                    });
+                } else {
+                    resultsDiv.style.display = 'block';
+                    resultsDiv.innerHTML = '<div style="padding: 20px; color: #888; text-align: center;">Nenhuma persona encontrada...</div>';
+                }
+            })
+            .catch(err => console.error("Erro na busca:", err));
+        }
+
+        function fecharBuscaEAbrirPerfil(charId) {
+            document.getElementById('searchResults').style.display = 'none';
+            document.getElementById('searchInput').value = '';
+            abrirPerfilPublico(charId);
+        }
+
+        function abrirInbox() {
+            if (!personagemAtivo) return;
+            document.getElementById('modal-inbox').style.display = 'flex';
+            document.getElementById('conteudo-inbox').innerHTML = '<p style="text-align:center; padding: 20px; color:#888;">Carregando conversas...</p>';
+            
+            fetch(`${API_MESSAGES}inbox/?persona_id=${personagemAtivo.id}`, { headers: headersAuth })
+            .then(res => res.json())
+            .then(conversas => {
+                const container = document.getElementById('conteudo-inbox');
+                if (conversas.length === 0) {
+                    container.innerHTML = '<p style="color:#888; text-align:center; padding: 20px;">Sua caixa de entrada está vazia.</p>';
+                    return;
+                }
+                container.innerHTML = conversas.map(c => {
+                    const avatarStr = formatarUrlImagem(c.contact_avatar);
+                    const isNew = c.is_unread ? `<span style="display:inline-block; width:10px; height:10px; background-color:var(--theme-color); border-radius:50%; margin-left:8px;"></span>` : '';
+                    const fontWeight = c.is_unread ? 'bold' : 'normal';
+                    const fontColor = c.is_unread ? '#fff' : '#aaa';
+                    
+                    return `
+                        <div class="search-result-item" onclick="fecharInbox(); abrirChat(${c.contact_id}, '${c.contact_name.replace(/'/g, "\\'")}', '${avatarStr}')">
+                            <img src="${avatarStr}">
+                            <div style="flex:1; overflow:hidden;">
+                                <strong style="color: white; display:flex; align-items:center;">${c.contact_name} ${isNew}</strong>
+                                <div style="color:${fontColor}; font-weight:${fontWeight}; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                                    ${c.last_message}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            });
+        }
+
+        function fecharInbox() { 
+            document.getElementById('modal-inbox').style.display = 'none'; 
+        }
+
+        function abrirModalNovaPersona() { 
+            document.getElementById('modal-nova-persona').style.display = 'flex'; 
+        }
+        
+        function fecharModalNovaPersona() { 
+            document.getElementById('modal-nova-persona').style.display = 'none'; 
+            document.getElementById('form-criar-persona').reset(); 
+        }
+
+        function fecharModalPerfilPublico() { 
+            document.getElementById('modal-perfil-publico').style.display = 'none'; 
+        }
+
+        function fecharModalListaUsuarios() { 
+            document.getElementById('modal-lista-usuarios').style.display = 'none'; 
+        }
+        
+        function abrirModalEditarPersona() {
+            if (!personagemAtivo) return;
+            document.getElementById('edit-nome').value = personagemAtivo.name || '';
+            document.getElementById('edit-especie').value = personagemAtivo.species || '';
+            document.getElementById('edit-localizacao').value = personagemAtivo.location || '';
+            document.getElementById('edit-idade').value = personagemAtivo.age || '';
+            document.getElementById('edit-pronomes').value = personagemAtivo.pronouns || '';
+            document.getElementById('edit-sexualidade').value = personagemAtivo.sexuality || '';
+            document.getElementById('edit-bio').value = personagemAtivo.bio || '';
+            document.getElementById('edit-font').value = personagemAtivo.font_style || 'sans-serif';
+
+            document.getElementById('modal-editar-persona').style.display = 'flex';
+        }
+
+        function fecharModalEditarPersona() { 
+            document.getElementById('modal-editar-persona').style.display = 'none'; 
+        }
+
+        function salvarEdicaoPersona(event) {
+            event.preventDefault();
+            const formData = new FormData();
+            formData.append('name', document.getElementById('edit-nome').value);
+            formData.append('species', document.getElementById('edit-especie').value);
+            formData.append('location', document.getElementById('edit-localizacao').value);
+            formData.append('age', document.getElementById('edit-idade').value);
+            formData.append('pronouns', document.getElementById('edit-pronomes').value);
+            formData.append('sexuality', document.getElementById('edit-sexualidade').value);
+            formData.append('bio', document.getElementById('edit-bio').value);
+            formData.append('font_style', document.getElementById('edit-font').value);
+
+            const avatarFile = document.getElementById('edit-avatar').files[0];
+            const capaFile = document.getElementById('edit-capa').files[0];
+            if (avatarFile) formData.append('avatar', avatarFile);
+            if (capaFile) formData.append('cover_photo', capaFile);
+
+            fetch(`${API_CHARACTERS}${personagemAtivo.id}/`, { method: 'PATCH', headers: headersUpload, body: formData })
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.erro || "Erro ao editar persona.");
+                alert("✨ Persona atualizada com sucesso!");
+                fecharModalEditarPersona();
+                document.getElementById('edit-avatar').value = '';
+                document.getElementById('edit-capa').value = '';
+                trocarPersonagemAtivo(personagemAtivo.id); 
+            }).catch(err => alert("⚠️ " + err.message));
+        }
+
+        function apagarPersonaAtiva() {
+            if (!personagemAtivo) return;
+            const confirmacao = confirm(`⚠️ CUIDADO! Tem certeza que deseja apagar a persona "${personagemAtivo.name}" para sempre? Essa ação não pode ser desfeita e todos os posts dela sumirão.`);
+            if (!confirmacao) return;
+
+            fetch(`${API_CHARACTERS}${personagemAtivo.id}/`, { method: 'DELETE', headers: headersAuth })
+            .then(res => {
+                if (res.ok || res.status === 204) {
+                    alert("🗑️ Persona apagada com sucesso.");
+                    fecharModalEditarPersona();
+                    personagemAtivo = null;
+                    window.location.reload(); 
+                } else {
+                    alert("⚠️ Erro ao tentar apagar a persona.");
+                }
+            }).catch(err => alert("⚠️ Erro de conexão: " + err.message));
+        }
+
+        function apagarPost(postId) {
+            if (!confirm("Tem certeza que deseja apagar esta publicação? A ação não pode ser desfeita.")) return;
+            
+            fetch(`${API_POSTS}${postId}/`, { method: 'DELETE', headers: headersAuth })
+            .then(res => {
+                if (res.ok || res.status === 204) {
+                    alert("🗑️ Publicação apagada!");
+                    carregarPosts(); 
+                    if (document.getElementById('modal-perfil-publico').style.display === 'flex') {
+                        fecharModalPerfilPublico(); 
+                    }
+                } else {
+                    alert("⚠️ Erro ao tentar apagar a publicação.");
+                }
+            }).catch(err => alert("Erro de conexão."));
+        }
+
+        function apagarComentario(commentId) {
+            if (!confirm("Tem certeza que deseja apagar este comentário?")) return;
+            
+            fetch(`${API_COMMENTS}${commentId}/`, { method: 'DELETE', headers: headersAuth })
+            .then(res => {
+                if (res.ok || res.status === 204) {
+                    carregarPosts(); 
+                } else {
+                    alert("⚠️ Erro ao tentar apagar o comentário.");
+                }
+            }).catch(err => alert("Erro de conexão."));
+        }
+
+        function abrirListaSeguidores(characterId, characterName) {
+            document.getElementById('modal-lista-usuarios').style.display = 'flex'; 
+            document.getElementById('titulo-lista-usuarios').innerText = `Seguidores de ${characterName}`;
+            document.getElementById('conteudo-lista-usuarios').innerHTML = '<p style="text-align:center; padding: 20px;">Carregando...</p>';
+            
+            fetch(`${API_CHARACTERS}${characterId}/followers_list/`, { headers: headersAuth })
+            .then(res => res.json())
+            .then(data => renderizarListaUsuarios(data));
+        }
+
+        function abrirListaSeguindo(characterId, characterName) {
+            document.getElementById('modal-lista-usuarios').style.display = 'flex'; 
+            document.getElementById('titulo-lista-usuarios').innerText = `${characterName} está Seguindo`;
+            document.getElementById('conteudo-lista-usuarios').innerHTML = '<p style="text-align:center; padding: 20px;">Carregando...</p>';
+            
+            fetch(`${API_CHARACTERS}${characterId}/following_list/`, { headers: headersAuth })
+            .then(res => res.json())
+            .then(data => renderizarListaUsuarios(data));
+        }
+
+        function renderizarListaUsuarios(lista) {
+            const container = document.getElementById('conteudo-lista-usuarios');
+            if (lista.length === 0) { 
+                container.innerHTML = '<p style="color:#888; text-align:center; padding: 20px;">Ainda não há ninguém aqui.</p>'; 
+                return; 
+            }
+            container.innerHTML = lista.map(u => `
+                <div class="search-result-item" onclick="fecharModalListaUsuarios(); abrirPerfilPublico(${u.id})">
+                    <img src="${formatarUrlImagem(u.avatar)}">
+                    <div>
+                        <strong style="color: white;">${u.name}</strong><br>
+                        <small style="color:#aaa;">${u.species}</small>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function enviarNovaPersona(event) {
+            event.preventDefault(); 
+            const formData = new FormData();
+            formData.append('name', document.getElementById('nova-nome').value);
+            formData.append('species', document.getElementById('nova-especie').value);
+            formData.append('location', document.getElementById('nova-localizacao').value);
+            formData.append('age', document.getElementById('nova-idade').value);
+            formData.append('pronouns', document.getElementById('nova-pronomes').value);
+            formData.append('sexuality', document.getElementById('nova-sexualidade').value);
+            formData.append('bio', document.getElementById('nova-bio').value);
+            
+            const avatarFile = document.getElementById('nova-avatar').files[0];
+            const capaFile = document.getElementById('nova-capa').files[0];
+            if (avatarFile) formData.append('avatar', avatarFile);
+            if (capaFile) formData.append('cover_photo', capaFile);
+
+            fetch(API_CHARACTERS, { method: 'POST', headers: headersUpload, body: formData })
+            .then(async res => {
+                const data = await res.json();
+                if (!res.ok) throw new Error(data.erro || "Erro ao criar persona.");
+                alert("Persona invocada com sucesso!");
+                fecharModalNovaPersona(); 
+                inicializarAplicacao(); 
+            }).catch(err => alert("⚠️ " + err.message));
+        }
+
+        function inicializarAplicacao() {
+            fetch(API_CHARACTERS + 'my_personas/', { headers: headersAuth })
+                .then(res => res.json())
+                .then(data => {
+                    listaPersonagens = data;
+                    document.getElementById('status-api').style.display = "none";
+                    if (listaPersonagens.length === 0) {
+                        document.getElementById('perfil-personagem').style.display = 'block';
+                        document.getElementById('perfil-personagem').innerHTML = `<div class="card-content"><p style="text-align: center;">Você não possui Personas. Clique em <b>+ Nova Persona</b>!</p></div>`;
+                        return;
+                    }
+                    const seletor = document.getElementById('seletor-personagens');
+                    seletor.innerHTML = listaPersonagens.map(p => `<option value="${p.id}">${p.name}</option>`).join('');
+                    const pAtivaId = personagemAtivo ? personagemAtivo.id : listaPersonagens[listaPersonagens.length - 1].id;
+                    seletor.value = pAtivaId; 
+                    trocarPersonagemAtivo(pAtivaId);
+                });
+        }
+
+        function trocarPersonagemAtivo(id) {
+            personagemAtivo = listaPersonagens.find(p => p.id == id);
+            if (personagemAtivo) {
+                fetch(`${API_CHARACTERS}${id}/`, { headers: headersAuth })
+                .then(res => res.json())
+                .then(dadosAtualizados => { 
+                    personagemAtivo = dadosAtualizados; 
+                    renderizarPersonagem(); 
+                    carregarPosts(); 
+                    carregarNotificacoes();
+                });
+            }
+        }
+
+        function renderizarPersonagem() {
+            const p = personagemAtivo;
+            let corTema = p.theme_preference;
+            if (!corTema || !corTema.startsWith('#')) corTema = '#bb86fc';
+            
+            document.documentElement.style.setProperty('--theme-color', corTema); 
+            document.getElementById('input-cor-tema').value = corTema;
+            
+            let coverHtml = p.cover_photo ? `<div class="cover-photo" style="background-image: url('${formatarUrlImagem(p.cover_photo)}');"><div class="cover-gradient"></div></div>` : `<div class="cover-photo"><div class="cover-gradient"></div></div>`;
+            
+            let spotifyHtml = `<p style="color: #888; font-size: 13px;">Nenhuma música vinculada.</p>`;
+            if (p.theme_music_url && !p.theme_music_url.includes('youtube')) {
+                let trackId = p.theme_music_url.includes('track/') ? p.theme_music_url.split('track/')[1].split('?')[0] : p.theme_music_url;
+                spotifyHtml = `<iframe src="https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" style="border-radius:12px; margin-top:5px;"></iframe>`;
+            }
+            
+            document.getElementById('perfil-personagem').style.display = 'block';
+            document.getElementById('perfil-personagem').innerHTML = `
+                ${coverHtml}
+                <div class="card-content" style="padding-top: 0;">
+                    <div class="profile-header">
+                        <img src="${formatarUrlImagem(p.avatar)}" alt="Avatar" class="avatar">
+                        <h1 style="margin: 5px 0 0 0;">${p.name}</h1>
+                        <div class="follow-stats">
+                            <span onclick="abrirListaSeguidores(${p.id}, '${p.name}')"><strong>${p.total_followers}</strong> Seguidores</span>
+                            <span onclick="abrirListaSeguindo(${p.id}, '${p.name}')"><strong>${p.total_following}</strong> Seguindo</span>
+                        </div>
+                        <div class="badges-container">
+                            <span class="badge solid">${p.species}</span>
+                            <span class="badge">📍 ${p.location}</span>
+                            <span class="badge">⏳ ${p.age}</span>
+                            <span class="badge">⚧ ${p.pronouns || '?'}</span>
+                            <span class="badge">🏳️‍🌈 ${p.sexuality || '?'}</span>
+                        </div>
+                    </div>
+                    <hr>
+                    <p style="font-size: 14.5px; line-height: 1.6; color: #d1d1d1; font-family: ${p.font_style || 'sans-serif'};"><strong>Lore:</strong><br>${(p.bio||'').replace(/\n/g, '<br>')}</p>
+                    <hr>
+                    <p style="margin-bottom: 5px; font-weight: bold;">🎵 Tema Musical:</p>${spotifyHtml}
+                </div>`;
+            document.getElementById('titulo-postagem').innerText = `O que ${p.name} está fazendo em ${p.location}?`; 
+            document.getElementById('area-config').style.display = 'block'; 
+            document.getElementById('area-postagem').style.display = 'block';
+        }
+
+        function abrirPerfilPublico(characterId) {
+            document.getElementById('modal-perfil-publico').style.display = 'flex';
+            const container = document.getElementById('conteudo-perfil-publico'); 
+            container.innerHTML = `<p style="padding: 30px; text-align: center;">Carregando perfil e publicações...</p>`;
+            
+            Promise.all([
+                fetch(`${API_CHARACTERS}${characterId}/`, { headers: headersAuth }).then(res => res.json()),
+                fetch(`${API_POSTS}?author_id=${characterId}`, { headers: headersAuth }).then(res => res.json())
+            ])
+            .then(([p, posts]) => {
+                let coverHtml = p.cover_photo ? `<div class="cover-photo" style="background-image: url('${formatarUrlImagem(p.cover_photo)}');"><div class="cover-gradient"></div></div>` : `<div class="cover-photo"><div class="cover-gradient"></div></div>`;
+                
+                let spotifyHtml = `<p style="color: #888; font-size: 13px;">Nenhuma música vinculada.</p>`;
+                if (p.theme_music_url && !p.theme_music_url.includes('youtube')) {
+                    let trackId = p.theme_music_url.includes('track/') ? p.theme_music_url.split('track/')[1].split('?')[0] : p.theme_music_url;
+                    spotifyHtml = `<iframe src="https://open.spotify.com/embed/track/${trackId}?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" style="border-radius:12px; margin-top:5px;"></iframe>`;
+                }
+                
+                const isFollowing = p.followers.includes(personagemAtivo.id); 
+                let btnFollowHtml = '';
+                
+                if (p.id !== personagemAtivo.id) {
+                    let textBotao = isFollowing ? "Deixar de Seguir" : `Seguir ${p.name}`; 
+                    let classBotao = isFollowing ? "btn-outline" : "btn-primary"; 
+                    let escapedName = p.name.replace(/'/g, "\\'");
+                    
+                    btnFollowHtml = `
+                        <div style="display:flex; gap: 10px; margin-top: 15px; flex-wrap:wrap; justify-content:center;">
+                            <button class="${classBotao}" onclick="toggleFollow(${p.id})">${textBotao}</button>
+                            <button class="btn-primary" onclick="abrirChat(${p.id}, '${escapedName}', '${formatarUrlImagem(p.avatar)}')">💬 Mensagem</button>
+                            <button class="btn-outline" style="border-color: #cf6679; color: #cf6679; padding: 10px 15px;" onclick="toggleMute(${p.id})">🚫 Ocultar / Silenciar</button>
+                        </div>`;
+                }
+
+                let postsHtml = posts.length === 0 ? `<p style="color: #888; text-align:center; font-size: 13px; padding: 15px;">Este personagem ainda não publicou nada.</p>` : posts.map(pItem => {
+                    let midiaHtml = pItem.image ? `<img src="${formatarUrlImagem(pItem.image)}" class="post-image">` : ''; 
+                    let spotifyEmbed = '';
+                    if (pItem.spotify_track_url) { 
+                        let tId = pItem.spotify_track_url.includes('track/') ? pItem.spotify_track_url.split('track/')[1].split('?')[0] : pItem.spotify_track_url; 
+                        spotifyEmbed = `<iframe src="https://open.spotify.com/embed/track/${tId}?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" style="border-radius:12px; margin-top:10px;"></iframe>`; 
+                    }
+                    const dataFormatada = new Date(pItem.created_at).toLocaleString('pt-BR'); 
+                    const isLiked = pItem.likes.includes(personagemAtivo.id);
+                    
+                    const isAuthor = pItem.author === personagemAtivo.id;
+                    const btnApagarPost = isAuthor ? `<button class="btn-action" style="color: #cf6679; font-size:13px;" onclick="apagarPost(${pItem.id})">🗑️ Apagar</button>` : '';
+
+                    return `
+                    <div class="post-item" style="margin: 15px; background: #181818;">
+                        <div class="post-header">
+                            <img src="${formatarUrlImagem(p.avatar)}">
+                            <div>
+                                <strong>${p.name}</strong>
+                                <span class="post-date">${dataFormatada}</span>
+                            </div>
+                        </div>
+                        <div class="post-content">${pItem.content}</div>
+                        ${midiaHtml}
+                        ${spotifyEmbed}
+                        <div class="interact-bar">
+                            <button class="btn-action ${isLiked ? 'liked' : ''}" onclick="curtirPost(${pItem.id})">❤️ <span>${pItem.total_likes} Likes</span></button>
+                            ${btnApagarPost}
+                            <button class="btn-action" style="color: #cf6679; font-size:13px;" onclick="denunciar('post', ${pItem.id})">🚩 Denunciar</button>
+                        </div>
+                    </div>`;
+                }).join('');
+                
+                container.innerHTML = `
+                    ${coverHtml}
+                    <div class="card-content" style="padding-top: 0;">
+                        <div class="profile-header">
+                            <img src="${formatarUrlImagem(p.avatar)}" class="avatar" style="box-shadow: 0 0 15px ${p.theme_preference || 'var(--theme-color)'}">
+                            <h1 style="margin: 5px 0 0 0;">${p.name}</h1>
+                            <div class="follow-stats">
+                                <span onclick="abrirListaSeguidores(${p.id}, '${p.name}')"><strong>${p.total_followers}</strong> Seguidores</span>
+                                <span onclick="abrirListaSeguindo(${p.id}, '${p.name}')"><strong>${p.total_following}</strong> Seguindo</span>
+                            </div>
+                            ${btnFollowHtml}
+                            <div class="badges-container" style="margin-top: 15px;">
+                                <span class="badge solid" style="background-color: ${p.theme_preference || 'var(--theme-color)'}; border-color: ${p.theme_preference || 'var(--theme-color)'}; color: black;">${p.species}</span>
+                                <span class="badge" style="color: ${p.theme_preference || 'var(--theme-color)'}; border-color: ${p.theme_preference || 'var(--theme-color)'};">📍 ${p.location}</span>
+                            </div>
+                        </div>
+                        <hr>
+                        <p style="font-size: 14.5px; line-height: 1.6; color: #d1d1d1; font-family: ${p.font_style || 'sans-serif'};"><strong>Lore:</strong><br>${(p.bio||'').replace(/\n/g, '<br>')}</p>
+                        <hr>
+                        <p style="margin-bottom: 5px; font-weight: bold;">🎵 Tema Musical:</p>${spotifyHtml}
+                        <hr>
+                        <h3 style="color: var(--theme-color); padding: 0 15px;">📜 Publicações de ${p.name}</h3>
+                        <div style="padding-bottom: 10px;">${postsHtml}</div>
+                    </div>`;
+            });
+        }
+
+        function abrirChat(targetId, targetName, targetAvatar) {
+            chatTargetId = targetId; 
+            document.getElementById('modal-chat').style.display = 'flex'; 
+            document.getElementById('chat-target-name').innerText = targetName; 
+            document.getElementById('chat-target-avatar').src = targetAvatar;
+            document.getElementById('chat-messages').innerHTML = '<p style="text-align:center; color:#888;">Criptografando frequência...</p>'; 
+            carregarMensagensDoChat();
+        }
+
+        function fecharChat() { 
+            chatTargetId = null; 
+            document.getElementById('modal-chat').style.display = 'none'; 
+        }
+
+        function carregarMensagensDoChat() {
+            if (!chatTargetId) return;
+            fetch(`${API_MESSAGES}conversation/?persona_id=${personagemAtivo.id}&target_id=${chatTargetId}`, { headers: headersAuth })
+            .then(res => res.json())
+            .then(mensagens => {
+                const container = document.getElementById('chat-messages');
+                if (mensagens.length === 0) { 
+                    container.innerHTML = `<p style="text-align:center; color:#888; font-size:13px; margin-top:auto;">Este é o começo da sua história secreta com esta persona.</p>`; 
+                    return; 
+                }
+                container.innerHTML = mensagens.map(m => {
+                    const isMinha = m.sender === personagemAtivo.id; 
+                    const classeBalao = isMinha ? 'msg-sent' : 'msg-received';
+                    const dataFormatada = new Date(m.created_at).toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'});
+                    
+                    return `
+                        <div class="msg-bubble ${classeBalao}">
+                            ${m.content}
+                            <div style="font-size:10px; opacity:0.6; text-align:right; margin-top:4px;">${dataFormatada}</div>
+                        </div>`;
+                }).join('');
+                container.scrollTop = container.scrollHeight;
+            });
+        }
+
+        function enviarMensagemDireta() {
+            if (enviandoMensagemChat) return; 
+            const input = document.getElementById('chat-input'); 
+            const btn = document.getElementById('btn-enviar-chat'); 
+            const conteudo = input.value.trim(); 
+            
+            if (!conteudo || !chatTargetId) return;
+            
+            enviandoMensagemChat = true; 
+            input.disabled = true; 
+            btn.disabled = true;
+            
+            fetch(API_MESSAGES, { 
+                method: 'POST', 
+                headers: headersAuth, 
+                body: JSON.stringify({ sender: personagemAtivo.id, receiver: chatTargetId, content: conteudo }) 
+            })
+            .then(res => { 
+                enviandoMensagemChat = false; 
+                input.disabled = false; 
+                btn.disabled = false;
+                
+                if (res.ok) { 
+                    input.value = ''; 
+                    carregarMensagensDoChat(); 
+                    input.focus(); 
+                } else { 
+                    alert("Erro ao enviar mensagem."); 
+                }
+            }).catch(() => { 
+                enviandoMensagemChat = false; 
+                input.disabled = false; 
+                btn.disabled = false; 
+            });
+        }
+
+        function toggleFollow(targetId) { 
+            fetch(`${API_CHARACTERS}${targetId}/toggle_follow/`, { 
+                method: 'POST', 
+                headers: headersAuth, 
+                body: JSON.stringify({ follower_id: personagemAtivo.id }) 
+            })
+            .then(res => res.json())
+            .then(data => { 
+                if (data.erro) alert("⚠️ " + data.erro); 
+                else { 
+                    abrirPerfilPublico(targetId); 
+                    trocarPersonagemAtivo(personagemAtivo.id); 
+                } 
+            }); 
+        }
+
+        function toggleMute(targetId) {
+            if (!confirm("Tem certeza que deseja alterar o silêncio deste usuário?")) return;
+            fetch(`${API_CHARACTERS}${targetId}/toggle_mute/`, { 
+                method: 'POST', 
+                headers: headersAuth, 
+                body: JSON.stringify({ persona_id: personagemAtivo.id }) 
+            })
+            .then(res => res.json())
+            .then(data => { 
+                if (data.erro) alert("⚠️ " + data.erro); 
+                else { 
+                    alert(data.status === 'muted' ? '🚫 Persona silenciada.' : '✅ Silêncio removido.'); 
+                    fecharModalPerfilPublico(); 
+                    carregarPosts(); 
+                }
+            });
+        }
+
+        function denunciar(tipo, id) {
+            if (!personagemAtivo) { alert("Selecione uma persona primeiro!"); return; }
+            const motivo = prompt(`🚩 Denunciar este ${tipo}:\nQual o motivo da denúncia? (ex: spam, ofensa, fora do RP)`);
+            if (!motivo) return;
+
+            const requestBody = { reporter: personagemAtivo.id, reason: motivo };
+            if (tipo === 'post') requestBody.reported_post = id;
+            if (tipo === 'comment') requestBody.reported_comment = id;
+
+            fetch(API_REPORTS, {
+                method: 'POST',
+                headers: headersAuth,
+                body: JSON.stringify(requestBody)
+            })
+            .then(res => {
+                if (res.ok) alert("🚩 Denúncia enviada para a Inquisição do Multiverso. A moderação analisará em breve.");
+                else alert("⚠️ Erro ao enviar denúncia.");
+            });
+        }
+
+        function buscarNoSpotifyPost() {
+            const query = document.getElementById('input-busca-spotify-post').value; 
+            const container = document.getElementById('resultados-spotify-post'); 
+            
+            if (!query) return; 
+            container.innerHTML = `<p style="font-size: 13px; color: #888;">Buscando...</p>`;
+            
+            fetch(API_SPOTIFY_SEARCH + encodeURIComponent(query))
+            .then(res => res.json())
+            .then(tracks => {
+                if (tracks.length === 0) { 
+                    container.innerHTML = `<p style="color: #cf6679;">Nenhuma faixa encontrada.</p>`; 
+                    return; 
+                }
+                container.innerHTML = tracks.map(t => `
+                    <div class="search-result-item" onclick="selecionarMusicaPost('${t.id}', '${t.name.replace(/'/g, "\\'")}', '${t.artist.replace(/'/g, "\\'")}')">
+                        <img src="${t.album_cover}">
+                        <div>
+                            <strong>${t.name}</strong><br>
+                            <small style="color:#aaa;">${t.artist}</small>
+                        </div>
+                    </div>
+                `).join('');
+            });
+        }
+
+        function selecionarMusicaPost(trackId, trackName, artistName) { 
+            musicaPostAtual = "https://open.spotify.com/track/" + trackId; 
+            document.getElementById('resultados-spotify-post').innerHTML = ''; 
+            document.getElementById('input-busca-spotify-post').value = ''; 
+            document.getElementById('musica-selecionada-post').innerHTML = `🎵 Trilha Selecionada: ${trackName} - ${artistName} <span style="cursor:pointer; color:#cf6679; margin-left:15px; font-size:11px;" onclick="removerMusicaPost()">[ X Remover ]</span>`; 
+        }
+
+        function removerMusicaPost() { 
+            musicaPostAtual = ""; 
+            document.getElementById('musica-selecionada-post').innerHTML = ''; 
+        }
+
+        function enviarPost() {
+            const conteudo = document.getElementById('texto-post').value; 
+            const imagem = document.getElementById('imagem-post').files[0]; 
+            
+            if (!conteudo && !imagem && !musicaPostAtual) return alert("Escreva algo, envie uma imagem ou selecione uma música!");
+            
+            const formData = new FormData(); 
+            formData.append('author', personagemAtivo.id); 
+            if (conteudo) formData.append('content', conteudo); 
+            if (imagem) formData.append('image', imagem); 
+            if (musicaPostAtual) formData.append('spotify_track_url', musicaPostAtual);
+            
+            document.getElementById('status-post').innerText = "Enviando..."; 
+            document.getElementById('status-post').style.color = "white";
+            
+            fetch(API_POSTS, { method: 'POST', headers: headersUpload, body: formData })
+            .then(res => {
+                if (res.ok) { 
+                    document.getElementById('texto-post').value = ""; 
+                    document.getElementById('imagem-post').value = ""; 
+                    removerMusicaPost(); 
+                    document.getElementById('status-post').innerText = "🔥 Postado com sucesso!"; 
+                    document.getElementById('status-post').style.color = "var(--theme-color)"; 
+                    carregarPosts(); 
+                } else { 
+                    document.getElementById('status-post').innerText = "⚠️ Erro ao publicar."; 
+                    document.getElementById('status-post').style.color = "#cf6679"; 
+                }
+            });
+        }
+
+        function renderizarComentarios(comments, postId) {
+            return comments.map(c => {
+                const isLiked = c.likes.includes(personagemAtivo.id); 
+                const likeClass = isLiked ? 'liked' : ''; 
+                let respostasHtml = '';
+                
+                if (c.replies && c.replies.length > 0) {
+                    respostasHtml = `<div class="replies-section">` + c.replies.map(r => { 
+                        const rLiked = r.likes.includes(personagemAtivo.id) ? 'liked' : ''; 
+                        
+                        const isReplyAuthor = r.author === personagemAtivo.id;
+                        const btnApagarReply = isReplyAuthor ? `<span class="comment-btn" style="color: #cf6679;" onclick="apagarComentario(${r.id})">🗑️ Apagar</span>` : '';
+
+                        return `
+                        <div class="reply-item">
+                            <img src="${formatarUrlImagem(r.author_avatar)}" onclick="abrirPerfilPublico(${r.author})">
+                            <div style="flex:1;">
+                                <div><strong onclick="abrirPerfilPublico(${r.author})">${r.author_name}:</strong> <span style="color:#ccc;">${r.content}</span></div>
+                                <div class="comment-actions">
+                                    <span class="comment-btn ${rLiked}" onclick="curtirComentario(${r.id})">❤️ ${r.total_likes}</span>
+                                    ${btnApagarReply}
+                                    <span class="comment-btn" style="color: #cf6679;" onclick="denunciar('comment', ${r.id})">🚩</span>
+                                </div>
+                            </div>
+                        </div>`; 
+                    }).join('') + `</div>`;
+                }
+                
+                const isCommentAuthor = c.author === personagemAtivo.id;
+                const btnApagarComment = isCommentAuthor ? `<span class="comment-btn" style="color: #cf6679;" onclick="apagarComentario(${c.id})">🗑️ Apagar</span>` : '';
+
+                return `
+                <div class="comment-item">
+                    <img src="${formatarUrlImagem(c.author_avatar)}" onclick="abrirPerfilPublico(${c.author})">
+                    <div style="flex:1;">
+                        <div><strong onclick="abrirPerfilPublico(${c.author})">${c.author_name}:</strong> <span style="color:#ccc;">${c.content}</span></div>
+                        <div class="comment-actions">
+                            <span class="comment-btn ${likeClass}" onclick="curtirComentario(${c.id})">❤️ ${c.total_likes}</span>
+                            <span class="comment-btn" onclick="abrirCaixaResposta(${c.id})">💬 Responder</span>
+                            ${btnApagarComment}
+                            <span class="comment-btn" style="color: #cf6679;" onclick="denunciar('comment', ${c.id})">🚩</span>
+                        </div>
+                        <div id="caixa-resposta-${c.id}" class="comment-box" style="display:none; margin-top:8px;">
+                            <input type="text" id="input-resposta-${c.id}" placeholder="Respondendo ${c.author_name}..." style="flex:1; padding:8px; font-size:13px;">
+                            <button class="btn-primary btn-small" onclick="enviarComentario(${postId}, ${c.id})">Enviar</button>
+                        </div>
+                        ${respostasHtml}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function abrirCaixaResposta(commentId) { 
+            const caixa = document.getElementById(`caixa-resposta-${commentId}`); 
+            caixa.style.display = caixa.style.display === 'none' ? 'flex' : 'none'; 
+        }
+
+        function carregarPosts() {
+            let urlFeed = API_POSTS; 
+            if (personagemAtivo) urlFeed += `?persona_id=${personagemAtivo.id}`;
+            
+            fetch(urlFeed, { headers: headersAuth })
+            .then(res => res.json())
+            .then(posts => {
+                const container = document.getElementById('lista-posts'); 
+                if (posts.length === 0) { 
+                    container.innerHTML = `<p style="color: #888;">Nenhuma publicação ainda.</p>`; 
+                    return; 
+                }
+                
+                container.innerHTML = posts.map(p => {
+                    const dataFormatada = new Date(p.created_at).toLocaleString('pt-BR'); 
+                    const isLiked = p.likes.includes(personagemAtivo.id);
+                    let midiaHtml = p.image ? `<img src="${formatarUrlImagem(p.image)}" class="post-image">` : ''; 
+                    let spotifyEmbed = '';
+                    
+                    if (p.spotify_track_url) { 
+                        let tId = p.spotify_track_url.includes('track/') ? p.spotify_track_url.split('track/')[1].split('?')[0] : p.spotify_track_url; 
+                        spotifyEmbed = `<iframe src="https://open.spotify.com/embed/track/${tId}?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" style="border-radius:12px; margin-top:10px;"></iframe>`; 
+                    }
+                    
+                    let comentariosHtml = renderizarComentarios(p.comments, p.id);
+                    
+                    const isAuthor = p.author === personagemAtivo.id;
+                    const btnApagarPost = isAuthor ? `<button class="btn-action" style="color: #cf6679; font-size:13px;" onclick="apagarPost(${p.id})">🗑️ Apagar</button>` : '';
+
+                    return `
+                    <div class="post-item">
+                        <div class="post-header">
+                            <img src="${formatarUrlImagem(p.author_avatar)}" onclick="abrirPerfilPublico(${p.author})">
+                            <div>
+                                <strong onclick="abrirPerfilPublico(${p.author})">${p.author_name}</strong>
+                                <span class="post-date">${dataFormatada}</span>
+                            </div>
+                        </div>
+                        <div class="post-content">${p.content}</div>
+                        ${midiaHtml}
+                        ${spotifyEmbed}
+                        <div class="interact-bar">
+                            <button class="btn-action ${isLiked ? 'liked' : ''}" onclick="curtirPost(${p.id})">❤️ <span>${p.total_likes} Likes</span></button>
+                            ${btnApagarPost}
+                            <button class="btn-action" style="color: #cf6679; font-size:13px;" onclick="denunciar('post', ${p.id})">🚩 Denunciar</button>
+                        </div>
+                        <div class="comments-section">
+                            ${comentariosHtml}
+                            <div class="comment-box" style="margin-top:15px; border-top:1px solid #222; padding-top:10px;">
+                                <input type="text" id="comentario-input-${p.id}" placeholder="Comentar como ${personagemAtivo.name}..." style="flex:1;">
+                                <button class="btn-primary btn-small" onclick="enviarComentario(${p.id})">Enviar</button>
+                            </div>
+                        </div>
+                    </div>`;
+                }).join(''); 
+            });
+        }
+
+        function curtirPost(postId) { 
+            fetch(`${API_POSTS}${postId}/toggle_like/`, { method: 'POST', headers: headersAuth, body: JSON.stringify({ persona_id: personagemAtivo.id }) })
+            .then(async res => { const data = await res.json(); if (!res.ok) alert("⚠️ " + data.erro); else carregarPosts(); }); 
+        }
+
+        function curtirComentario(commentId) { 
+            fetch(`${API_COMMENTS}${commentId}/toggle_like/`, { method: 'POST', headers: headersAuth, body: JSON.stringify({ persona_id: personagemAtivo.id }) })
+            .then(async res => { const data = await res.json(); if (!res.ok) alert("⚠️ " + data.erro); else carregarPosts(); }); 
+        }
+
+        function enviarComentario(postId, parentId = null) {
+            const inputId = parentId ? `input-resposta-${parentId}` : `comentario-input-${postId}`; 
+            const input = document.getElementById(inputId); 
+            const conteudo = input.value; 
+            
+            if (!conteudo) return;
+            
+            const requestBody = { post: postId, author: personagemAtivo.id, content: conteudo }; 
+            if (parentId) requestBody.parent = parentId; 
+            
+            fetch(API_COMMENTS, { method: 'POST', headers: headersAuth, body: JSON.stringify(requestBody) })
+            .then(res => { if (res.ok) carregarPosts(); else alert("Erro ao enviar."); });
+        }
+
+        function alterarCorTema(cor) { 
+            document.documentElement.style.setProperty('--theme-color', cor); 
+        }
+
+        function salvarCorTema() { 
+            const novaCor = document.getElementById('input-cor-tema').value; 
+            fetch(`${API_CHARACTERS}${personagemAtivo.id}/`, { method: 'PATCH', headers: headersAuth, body: JSON.stringify({ theme_preference: novaCor }) })
+            .then(res => { if(res.ok) { personagemAtivo.theme_preference = novaCor; alert("✅ Cor salva!"); } }); 
+        }
+
+        function buscarNoSpotify() {
+            const query = document.getElementById('input-busca-spotify').value; 
+            const container = document.getElementById('resultados-spotify'); 
+            
+            if (!query) return; 
+            container.innerHTML = `<p style="font-size: 13px; color: #888;">Buscando...</p>`;
+            
+            fetch(API_SPOTIFY_SEARCH + encodeURIComponent(query))
+            .then(res => res.json())
+            .then(tracks => {
+                if (tracks.length === 0) { container.innerHTML = `<p style="color: #cf6679;">Nenhuma faixa encontrada.</p>`; return; }
+                container.innerHTML = tracks.map(t => `
+                    <div class="search-result-item" onclick="selecionarMusica('${t.id}')">
+                        <img src="${t.album_cover}">
+                        <div>
+                            <strong>${t.name}</strong><br>
+                            <small style="color:#aaa;">${t.artist}</small>
+                        </div>
+                    </div>
+                `).join('');
+            });
+        }
+
+        function selecionarMusica(trackId) { 
+            const urlOficialSpotify = "https://open.spotify.com/track/" + trackId; 
+            fetch(`${API_CHARACTERS}${personagemAtivo.id}/`, { method: 'PATCH', headers: headersAuth, body: JSON.stringify({ theme_music_url: urlOficialSpotify }) })
+            .then(res => { 
+                if (res.ok) { 
+                    document.getElementById('resultados-spotify').innerHTML = `<p style="color: var(--theme-color);">✅ Tema atualizado!</p>`; 
+                    personagemAtivo.theme_music_url = urlOficialSpotify; 
+                    renderizarPersonagem(); 
+                }
+            }); 
+        }
+
+        // --- FUNÇÕES DE DOAÇÃO / PREMIUM ---
+        function abrirModalDoacao() {
+            document.getElementById('modal-doacao').style.display = 'flex';
+        }
+
+        function fecharModalDoacao() {
+            document.getElementById('modal-doacao').style.display = 'none';
+            document.getElementById('msg-pix-copiado').style.display = 'none';
+        }
+
+        function copiarPix() {
+            const inputPix = document.getElementById("chave-pix-input");
+            inputPix.select();
+            inputPix.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(inputPix.value).then(() => {
+                document.getElementById('msg-pix-copiado').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('msg-pix-copiado').style.display = 'none';
+                }, 3000);
+            });
+        }
+
+        function carregarNotificacoes() {
+            if (!personagemAtivo) return;
+            
+            fetch(API_NOTIFICATIONS, { headers: headersAuth })
+            .then(res => res.json())
+            .then(data => {
+                const naoLidas = data.filter(n => !n.is_read).length;
+                const badge = document.getElementById('badge-notificacoes');
+                
+                if (naoLidas > 0) {
+                    badge.innerText = naoLidas;
+                    badge.style.display = 'block';
+                } else {
+                    badge.style.display = 'none';
+                }
+                
+                window.notificacoesAtuais = data; 
+            });
+        }
+
+        function abrirNotificacoes() {
+            document.getElementById('modal-notificacoes').style.display = 'flex';
+            const container = document.getElementById('conteudo-notificacoes');
+            
+            if (!window.notificacoesAtuais || window.notificacoesAtuais.length === 0) {
+                container.innerHTML = '<p style="color:#888; text-align:center; padding: 20px;">Nenhuma novidade por aqui.</p>';
+                return;
+            }
+
+            container.innerHTML = window.notificacoesAtuais.map(n => {
+                let acaoText = '';
+                if (n.notification_type === 'follow') acaoText = 'começou a seguir você.';
+                if (n.notification_type === 'like_post') acaoText = 'curtiu sua publicação.';
+                if (n.notification_type === 'like_comment') acaoText = 'curtiu seu comentário.';
+                if (n.notification_type === 'comment') acaoText = 'comentou na sua publicação.';
+
+                const isNova = !n.is_read ? 'border-left: 4px solid var(--theme-color); background: #2a2a2a;' : '';
+                
+                return `
+                    <div class="search-result-item" style="padding: 12px; margin-bottom: 8px; border-radius: 8px; align-items: flex-start; ${isNova}">
+                        <img src="${formatarUrlImagem(n.sender_avatar)}" onclick="fecharNotificacoes(); abrirPerfilPublico(${n.sender})" style="cursor: pointer;">
+                        <div style="flex:1;">
+                            <span style="color: #ddd; font-size: 14px;"><strong style="cursor:pointer; color: white;" onclick="fecharNotificacoes(); abrirPerfilPublico(${n.sender})">${n.sender_name}</strong> ${acaoText}</span>
+                            <div style="font-size: 11px; color: #888; margin-top: 4px;">${new Date(n.created_at).toLocaleString('pt-BR')}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            fetch(`${API_NOTIFICATIONS}mark_all_as_read/`, {
+                method: 'POST',
+                headers: headersAuth,
+                body: JSON.stringify({ persona_id: personagemAtivo.id })
+            }).then(() => {
+                document.getElementById('badge-notificacoes').style.display = 'none';
+            });
+        }
+
+        function fecharNotificacoes() {
+            document.getElementById('modal-notificacoes').style.display = 'none';
+            carregarNotificacoes(); 
+        }
+
+        inicializarAplicacao();
+    </script>
+</body>
+</html>
