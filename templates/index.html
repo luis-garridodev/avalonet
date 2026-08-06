@@ -36,7 +36,7 @@
         
         .modal { display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.85); overflow-y: auto; align-items: flex-start; justify-content: center; backdrop-filter: blur(5px); padding-top: 2rem; padding-bottom: 2rem; }
         .modal-content { background-color: #161616; max-width: 600px; width: 90%; margin: auto; padding: 25px; border-radius: 12px; border: 1px solid #242424; position: relative; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7); }
-        .fechar-modal { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #888; transition: 0.2s; }
+        .fechar-modal { position: absolute; right: 20px; top: 15px; font-size: 28px; cursor: pointer; color: #888; transition: 0.2s; z-index: 50; }
         .fechar-modal:hover { color: white; }
 
         input[type="text"], input[type="number"], input[type="email"], textarea, select { width: 100%; background-color: #111; color: white; border: 1px solid #242424; border-radius: 8px; padding: 12px; margin-bottom: 15px; font-size: 13px; outline: none; transition: border-color 0.2s; }
@@ -88,8 +88,10 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col no-scrollbar bg-vkbg text-white overflow-x-hidden">
 
+    <!-- CONTAINER DE NOTIFICAÇÕES TOAST -->
     <div id="toast-container"></div>
 
+    <!-- HEADER GERAL -->
     <header class="bg-[#0a0a0a] border-b border-vkborder h-[50px] sticky top-0 z-50 flex items-center">
         <div class="w-full max-w-[1000px] mx-auto px-2 sm:px-4 flex items-center justify-between">
             <div class="flex items-center gap-3 sm:gap-6 relative">
@@ -122,6 +124,7 @@
         </div>
     </header>
 
+    <!-- 🔥 MENU LATERAL MOBILE 🔥 -->
     <div id="backdrop-menu" onclick="toggleMenuMobile()" class="fixed inset-0 bg-black/80 z-[999] hidden md:hidden backdrop-blur-sm transition-opacity"></div>
     <div id="menu-mobile" class="fixed inset-y-0 left-0 z-[1000] w-[260px] bg-vkcard border-r border-vkborder transform -translate-x-full transition-transform duration-300 md:hidden flex flex-col h-full shadow-2xl">
         <div class="p-4 border-b border-vkborder flex justify-between items-center bg-[#0a0a0a]">
@@ -223,15 +226,17 @@
             <div id="area-postagem" class="bg-vkcard rounded-xl p-3 sm:p-4 border border-vkborder shadow-sm flex flex-col gap-3" style="display: none;">
                 <div class="flex gap-3">
                     <img id="avatar-postagem-preview" src="" class="w-8 h-8 rounded-full bg-gray-800 object-cover hidden sm:block">
-                    <textarea id="texto-post" placeholder="O que há de novo?" class="bg-transparent flex-1 text-[13px] outline-none text-white placeholder-gray-500 m-0 p-1 border-none min-h-[40px] resize-none"></textarea>
+                    <div class="flex-1">
+                        <textarea id="texto-post" placeholder="O que há de novo?" class="bg-transparent w-full text-[13px] outline-none text-white placeholder-gray-500 m-0 p-1 border-none min-h-[40px] resize-none"></textarea>
+                        <!-- NOVO: Título do Capítulo (Fica oculto até escolher uma saga) -->
+                        <input type="text" id="post-chapter-title" placeholder="Título do Capítulo (Opcional)..." class="bg-transparent border-t border-vkborder w-full pt-2 mt-1 text-[12px] text-white outline-none hidden focus:border-vkpurple transition" style="color: var(--theme-color);">
+                    </div>
                 </div>
                 <div class="flex justify-between items-center pt-2 border-t border-vkborder flex-wrap gap-2">
                     <div class="flex gap-2 text-gray-400 items-center overflow-x-auto no-scrollbar">
                         <input type="file" id="imagem-post" accept="image/*" class="hidden" onchange="abrirModalCropper(this)">
-                        
                         <button onclick="document.getElementById('imagem-post').click()" class="hover:text-white transition p-1 text-[12px] sm:text-[13px] flex items-center gap-1 shrink-0">📸 Foto</button>
                         <button onclick="document.getElementById('container-busca-spotify-post').classList.toggle('hidden')" class="hover:text-white transition p-1 text-[12px] sm:text-[13px] flex items-center gap-1 shrink-0">🎵 Música</button>
-                        
                         <select id="post-font" onchange="verificarFonteVIP(this)" class="bg-transparent hover:bg-white/5 transition text-[12px] sm:text-[13px] p-1 rounded border border-transparent hover:border-vkborder outline-none m-0 h-auto cursor-pointer shrink-0 font-medium text-gray-300">
                             <option value="sans-serif" class="bg-vkcard text-white">🔤 Padrão</option>
                             <option value="'Courier New', monospace" class="bg-vkcard text-white" style="font-family: 'Courier New', monospace;">🔤 Typewriter</option>
@@ -240,27 +245,13 @@
                             <option value="'Cinzel', serif" class="bg-[#1f1f1f] text-yellow-500 font-bold">⭐ Medieval (VIP)</option>
                             <option value="'Creepster', cursive" class="bg-[#1f1f1f] text-yellow-500 font-bold">⭐ Terror (VIP)</option>
                         </select>
-                        <!-- Troque a div dos botões da postagem por essa com o seletor da saga -->
-<div class="flex gap-2 text-gray-400 items-center overflow-x-auto no-scrollbar">
-    <input type="file" id="imagem-post" accept="image/*" class="hidden" onchange="abrirModalCropper(this)">
-    
-    <button onclick="document.getElementById('imagem-post').click()" class="hover:text-white transition p-1 text-[12px] sm:text-[13px] flex items-center gap-1 shrink-0">📸 Foto</button>
-    <button onclick="document.getElementById('container-busca-spotify-post').classList.toggle('hidden')" class="hover:text-white transition p-1 text-[12px] sm:text-[13px] flex items-center gap-1 shrink-0">🎵 Música</button>
-    
-    <select id="post-font" onchange="verificarFonteVIP(this)" class="bg-transparent hover:bg-white/5 transition text-[12px] sm:text-[13px] p-1 rounded border border-transparent hover:border-vkborder outline-none m-0 h-auto cursor-pointer shrink-0 font-medium text-gray-300">
-        <option value="sans-serif" class="bg-vkcard text-white">🔤 Padrão</option>
-        <option value="'Courier New', monospace" class="bg-vkcard text-white" style="font-family: 'Courier New', monospace;">🔤 Typewriter</option>
-        <option value="Georgia, serif" class="bg-vkcard text-white" style="font-family: Georgia, serif;">🔤 Elegante</option>
-        <option value="'Brush Script MT', cursive" class="bg-vkcard text-white" style="font-family: 'Brush Script MT', cursive;">🔤 Manuscrita</option>
-        <option value="'Cinzel', serif" class="bg-[#1f1f1f] text-yellow-500 font-bold">⭐ Medieval (VIP)</option>
-        <option value="'Creepster', cursive" class="bg-[#1f1f1f] text-yellow-500 font-bold">⭐ Terror (VIP)</option>
-    </select>
-
-    <!-- 👇 SELETOR DE SAGAS ADICIONADO 👇 -->
-    <select id="post-saga" class="bg-transparent hover:bg-white/5 transition text-[12px] sm:text-[13px] p-1 rounded border border-transparent hover:border-vkborder outline-none m-0 h-auto cursor-pointer shrink-0 font-medium" style="color: var(--theme-color);">
-        <option value="" class="bg-vkcard text-gray-400">📖 Avulso</option>
-    </select>
-</div>
+                        <div class="flex items-center gap-1 shrink-0 border-l border-vkborder pl-2">
+                            <!-- Modificado para mostrar o input de Título se tiver saga -->
+                            <select id="post-saga" onchange="document.getElementById('post-chapter-title').style.display = this.value ? 'block' : 'none';" class="bg-transparent hover:bg-white/5 transition text-[12px] sm:text-[13px] p-1 rounded border border-transparent hover:border-vkborder outline-none m-0 h-auto cursor-pointer font-medium text-gray-300 max-w-[100px] truncate" style="color: var(--theme-color);">
+                                <option value="" class="bg-vkcard text-gray-400">📖 Avulso</option>
+                            </select>
+                            <button onclick="document.getElementById('modal-nova-saga').style.display='flex'" class="text-gray-500 hover:text-white transition px-1 text-[14px]" title="Criar Nova Saga">➕</button>
+                        </div>
                     </div>
                     <div class="flex items-center gap-2 sm:gap-3">
                         <p id="status-post" class="text-[11px] text-gray-500 m-0"></p>
@@ -274,7 +265,6 @@
                         <button onclick="buscarNoSpotifyPost()" class="bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition border border-vkborder shrink-0">Buscar</button>
                     </div>
                 </div>
-                
                 <div id="resultados-spotify-post" class="max-h-24 overflow-y-auto space-y-1 mt-1"></div>
                 <div id="musica-selecionada-post" class="text-[11px] font-bold" style="color: var(--theme-color);"></div>
             </div>
@@ -316,6 +306,8 @@
         </aside>
     </main>
 
+    <!-- ================= MODAIS ================= -->
+    
     <div id="modal-cropper" class="modal z-[10005]">
         <div class="modal-content !max-w-md text-center">
             <span class="fechar-modal" onclick="fecharModalCropper()">×</span>
@@ -347,6 +339,7 @@
         </div>
     </div>
 
+    <!-- 🔥 MODAL NOVA SAGA (ÁLBUNS DE RP) 🔥 -->
     <div id="modal-nova-saga" class="modal z-[10005]">
         <div class="modal-content">
             <span class="fechar-modal" onclick="document.getElementById('modal-nova-saga').style.display='none'">×</span>
@@ -358,15 +351,51 @@
         </div>
     </div>
 
+    <!-- 🔥 MODAL LEITOR DE SAGAS 🔥 -->
+    <div id="modal-ler-saga" class="modal z-[10006]">
+        <div class="modal-content !max-w-3xl flex flex-col p-0 overflow-hidden bg-vkcard h-[90vh]">
+            <div class="p-5 border-b border-vkborder flex justify-between items-center shrink-0 bg-[#0a0a0a]">
+                <div>
+                    <h3 class="text-lg font-bold flex items-center gap-2 text-white" id="ler-saga-titulo">📖 Título</h3>
+                    <p class="text-xs text-gray-500 mt-1" id="ler-saga-desc">Descrição...</p>
+                </div>
+                <button type="button" onclick="fecharLeitorSaga()" class="text-gray-500 hover:text-white text-3xl leading-none transition">×</button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-4 sm:p-6 bg-vkbg" id="ler-saga-posts">
+                <!-- Capítulos vão aparecer aqui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔥 MODAL EDITAR POST (COM Z-INDEX 10007 PARA FICAR NA FRENTE DO LEITOR) 🔥 -->
+    <div id="modal-editar-post" class="modal z-[10007]">
+        <div class="modal-content !max-w-lg">
+            <span class="fechar-modal" onclick="fecharModalEditarPost()">×</span>
+            <h3 class="text-lg font-bold mb-4 text-white">✏️ Editar Publicação</h3>
+            
+            <input type="hidden" id="edit-post-id">
+            <textarea id="edit-post-content" rows="6" placeholder="Carregando pergaminho..." class="bg-[#111] border border-vkborder rounded-md px-3 py-2 text-[13px] w-full text-white m-0 outline-none focus:border-vkpurple transition resize-none"></textarea>
+            
+            <!-- SELETOR DE SAGAS NO EDITAR ADICIONADO -->
+            <select id="edit-post-saga" onchange="document.getElementById('edit-post-chapter-title').style.display = this.value ? 'block' : 'none';" class="w-full bg-[#111] border border-vkborder rounded-md px-3 py-2 text-[13px] text-white outline-none mb-2 mt-2 cursor-pointer focus:border-vkpurple transition">
+                <option value="">📖 Postagem Avulsa</option>
+            </select>
+            <!-- Input de editar o nome do capítulo -->
+            <input type="text" id="edit-post-chapter-title" placeholder="Nome do Capítulo (Opcional)..." class="w-full bg-[#111] border border-vkborder rounded-md px-3 py-2 text-[13px] text-white outline-none mb-3 hidden focus:border-vkpurple transition" style="color: var(--theme-color);">
+            
+            <button onclick="salvarEdicaoPost()" class="w-full text-white font-bold py-3 rounded-xl transition shadow-lg" style="background-color: var(--theme-color);">Salvar Alterações</button>
+        </div>
+    </div>
+
     <div id="modal-conquistas" class="modal z-[10000]">
-        <div class="modal-content !max-w-4xl flex flex-col p-0 overflow-hidden bg-vkcard">
+        <div class="modal-content !max-w-2xl flex flex-col p-0 overflow-hidden bg-vkcard">
             <div class="p-5 border-b border-vkborder flex justify-between items-center shrink-0 bg-[#0a0a0a]">
                 <h3 class="text-lg font-bold flex items-center gap-2 text-yellow-500">🏆 Conquistas & Quests</h3>
                 <button type="button" onclick="fecharConquistas()" class="text-gray-500 hover:text-white text-2xl leading-none transition">×</button>
             </div>
             <div class="p-6 overflow-y-auto max-h-[75vh] bg-vkbg space-y-8 custom-scrollbar">
                 
-                <!-- 📜 MISSÕES DIÁRIAS (Mantidas iguais) -->
+                <!-- 📜 MISSÕES DIÁRIAS -->
                 <div>
                     <h4 class="font-bold text-white mb-4 flex items-center gap-2 text-[15px]">📜 Missões Diárias <span class="text-[10px] font-normal text-gray-500 bg-[#111] px-2 py-0.5 rounded border border-vkborder">(Reseta à meia-noite)</span></h4>
                     <div class="space-y-3">
@@ -510,6 +539,7 @@
         </div>
     </div>
 
+    <!-- 🔥 MODAL GERENCIAR UNIVERSO 🔥 -->
     <div id="modal-gerenciar-universo" class="modal z-[10001]">
         <div class="modal-content !max-w-2xl">
             <span class="fechar-modal" onclick="fecharModalGerenciarUniverso()">×</span>
@@ -520,6 +550,7 @@
                 <button class="pb-2 font-bold text-gray-500 hover:text-gray-300 transition" id="tab-uni-reqs" onclick="mudarAbaGerenciarUni('reqs')">📩 Solicitações <span id="badge-reqs" class="hidden bg-red-500 text-white text-[9px] px-1.5 py-0.5 rounded-full ml-1">0</span></button>
             </div>
 
+            <!-- Aba Editar -->
             <div id="aba-uni-edit">
                 <form id="form-editar-universo" onsubmit="salvarEdicaoUniverso(event)">
                     <input type="hidden" id="edit-uni-id">
@@ -552,6 +583,7 @@
                 </form>
             </div>
 
+            <!-- Aba Solicitações -->
             <div id="aba-uni-reqs" class="hidden">
                 <div id="lista-uni-solicitacoes" class="space-y-2 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                     <p class="text-center text-gray-500 text-sm py-4">Carregando solicitações...</p>
@@ -560,6 +592,7 @@
         </div>
     </div>
 
+    <!-- 🔥 MODAL CONEXÕES 🔥 -->
     <div id="modal-conexoes" class="modal z-[10000]">
         <div class="modal-content !max-w-4xl flex flex-col p-0 overflow-hidden bg-vkcard h-[85vh]">
             <div class="p-5 border-b border-vkborder flex justify-between items-center shrink-0">
@@ -667,6 +700,7 @@
         </div>
     </div>
 
+    <!-- MODAL DA LOJA / INVENTÁRIO -->
     <div id="modal-loja" class="modal z-[10000]">
         <div class="modal-content !max-w-3xl flex flex-col p-0 overflow-hidden bg-vkcard">
             <div class="p-5 border-b border-vkborder flex justify-between items-center shrink-0">
@@ -698,6 +732,7 @@
                 
                 <h4 class="font-bold text-white mb-4 text-sm">🎒 Inventário & Efeitos (Auras)</h4>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- AURA FIRE -->
                     <div class="bg-[#111] border border-vkborder p-4 rounded-xl text-center flex flex-col items-center gap-3">
                         <img id="preview-fogo" src="https://via.placeholder.com/60/161616/888888?text=Avatar" class="w-[60px] h-[60px] rounded-full border-[3px] effect-fire object-cover">
                         <div>
@@ -706,6 +741,7 @@
                         </div>
                         <button id="btn-aura-effect-fire" class="w-full bg-white/5 hover:bg-white/10 text-white text-xs py-2 rounded-lg transition border border-vkborder mt-auto">Carregando...</button>
                     </div>
+                    <!-- AURA NEON -->
                     <div class="bg-[#111] border border-vkborder p-4 rounded-xl text-center flex flex-col items-center gap-3">
                         <img id="preview-neon" src="https://via.placeholder.com/60/161616/888888?text=Avatar" class="w-[60px] h-[60px] rounded-full border-[3px] effect-neon object-cover">
                         <div>
@@ -714,6 +750,7 @@
                         </div>
                         <button id="btn-aura-effect-neon" class="w-full bg-white/5 hover:bg-white/10 text-white text-xs py-2 rounded-lg transition border border-vkborder mt-auto">Carregando...</button>
                     </div>
+                    <!-- AURA VOID -->
                     <div class="bg-[#111] border border-vkborder p-4 rounded-xl text-center flex flex-col items-center gap-3">
                         <img id="preview-vazio" src="https://via.placeholder.com/60/161616/888888?text=Avatar" class="w-[60px] h-[60px] rounded-full border-[3px] effect-void object-cover">
                         <div>
@@ -832,8 +869,10 @@
         </div>
     </div>
 
+    <!-- 🔥 MODAL TERMOS DE USO COMPLETO 🔥 -->
     <div id="modal-termos" class="modal z-[10005]">
         <div class="modal-content !max-w-2xl flex flex-col p-0 overflow-hidden bg-vkcard h-[90vh]">
+            <!-- Cabeçalho do Modal -->
             <div class="p-5 border-b border-vkborder flex justify-between items-center shrink-0 bg-[#0a0a0a]">
                 <div>
                     <h3 class="text-lg font-bold flex items-center gap-2" style="color: var(--theme-color);">📜 TERMOS DE USO E DIRETRIZES</h3>
@@ -842,6 +881,7 @@
                 <button type="button" onclick="fecharModalTermos()" class="text-gray-500 hover:text-white text-2xl leading-none transition">×</button>
             </div>
 
+            <!-- ÁREA DE TEXTO COM SCROLL -->
             <div class="overflow-y-auto p-5 text-[13px] text-gray-300 space-y-5 custom-scrollbar flex-1 bg-vkbg">
                 
                 <p class="italic text-gray-400">Ao criar sua conta, invocar suas personas e acessar a plataforma, você declara ter lido, compreendido e aceito integralmente os termos e diretrizes abaixo.</p>
@@ -896,6 +936,7 @@
 
             </div>
 
+            <!-- BOTÃO DE ACEITE -->
             <div class="p-4 border-t border-vkborder bg-[#0a0a0a] shrink-0">
                 <button type="button" onclick="fecharModalTermos()" class="w-full text-white font-bold py-3.5 rounded-xl transition shadow-lg hover:opacity-80" style="background-color: var(--theme-color);">
                     Li e Aceito os Termos
@@ -905,22 +946,25 @@
         </div>
     </div>
 
-   <div id="modal-editar-post" class="modal z-[10005]">
-    <div class="modal-content !max-w-lg">
-        <span class="fechar-modal" onclick="fecharModalEditarPost()">×</span>
-        <h3 class="text-lg font-bold mb-4 text-white">✏️ Editar Publicação</h3>
-        
-        <input type="hidden" id="edit-post-id">
-        <textarea id="edit-post-content" rows="6" placeholder="Carregando pergaminho..." class="bg-[#111] border border-vkborder rounded-md px-3 py-2 text-[13px] w-full text-white m-0 outline-none focus:border-vkpurple transition resize-none"></textarea>
-        
-        <!-- 👇 SELETOR DE SAGAS NO EDITAR ADICIONADO 👇 -->
-        <select id="edit-post-saga" class="w-full bg-[#111] border border-vkborder rounded-md px-3 py-2 text-[13px] text-white outline-none mb-3 mt-2">
-            <option value="">📖 Postagem Avulsa</option>
-        </select>
-        
-        <button onclick="salvarEdicaoPost()" class="w-full text-white font-bold py-3 rounded-xl transition shadow-lg" style="background-color: var(--theme-color);">Salvar Alterações</button>
+    <!-- 🔥 MODAL EDITAR POST (COM Z-INDEX 10007 PARA FICAR NA FRENTE DO LEITOR) 🔥 -->
+    <div id="modal-editar-post" class="modal z-[10007]">
+        <div class="modal-content !max-w-lg">
+            <span class="fechar-modal" onclick="fecharModalEditarPost()">×</span>
+            <h3 class="text-lg font-bold mb-4 text-white">✏️ Editar Publicação</h3>
+            
+            <input type="hidden" id="edit-post-id">
+            <textarea id="edit-post-content" rows="6" placeholder="Carregando pergaminho..." class="bg-[#111] border border-vkborder rounded-md px-3 py-2 text-[13px] w-full text-white m-0 outline-none focus:border-vkpurple transition resize-none"></textarea>
+            
+            <!-- SELETOR DE SAGAS NO EDITAR ADICIONADO -->
+            <select id="edit-post-saga" onchange="document.getElementById('edit-post-chapter-title').style.display = this.value ? 'block' : 'none';" class="w-full bg-[#111] border border-vkborder rounded-md px-3 py-2 text-[13px] text-white outline-none mb-2 mt-2 cursor-pointer focus:border-vkpurple transition">
+                <option value="">📖 Postagem Avulsa</option>
+            </select>
+            <!-- Input de editar o nome do capítulo -->
+            <input type="text" id="edit-post-chapter-title" placeholder="Nome do Capítulo (Opcional)..." class="w-full bg-[#111] border border-vkborder rounded-md px-3 py-2 text-[13px] text-white outline-none mb-3 hidden focus:border-vkpurple transition" style="color: var(--theme-color);">
+            
+            <button onclick="salvarEdicaoPost()" class="w-full text-white font-bold py-3 rounded-xl transition shadow-lg" style="background-color: var(--theme-color);">Salvar Alterações</button>
+        </div>
     </div>
-</div>
 
     <script>
         let abaAtualContexto = 'perfil'; // Rastreia onde o usuário está ('perfil' ou 'global')
@@ -1034,37 +1078,64 @@
         }
 
         // --- LÓGICA DE EDIÇÃO DE POSTS ---
+        function fecharModalEditarPost() {
+            document.getElementById('modal-editar-post').style.display = 'none';
+        }
+
         function abrirModalEditarPost(postId) {
             document.getElementById('edit-post-id').value = postId;
             document.getElementById('edit-post-content').value = "Buscando nos arquivos akáshicos...";
             document.getElementById('modal-editar-post').style.display = 'flex';
 
+            // Carrega as opções de sagas do personagem ativo no menu de editar
+            const editSagaSelect = document.getElementById('edit-post-saga');
+            let sagasOptions = `<option value="">📖 Postagem Avulsa</option>`;
+            if (personagemAtivo.sagas && personagemAtivo.sagas.length > 0) {
+                personagemAtivo.sagas.forEach(s => {
+                    sagasOptions += `<option value="${s.id}">📖 ${escaparHtml(s.title)}</option>`;
+                });
+            }
+            editSagaSelect.innerHTML = sagasOptions;
+
             apiFetch(`${API_POSTS}${postId}/`, { headers: headersAuth })
             .then(res => res.json())
             .then(data => {
                 document.getElementById('edit-post-content').value = data.content;
+                // Marca a saga que o post já tinha (se houver)
+                editSagaSelect.value = data.saga || "";
+                
+                // Exibe o input de título se pertencer a uma saga
+                const editChapterInput = document.getElementById('edit-post-chapter-title');
+                editChapterInput.style.display = data.saga ? 'block' : 'none';
+                editChapterInput.value = data.chapter_title || "";
             }).catch(err => {
                 document.getElementById('edit-post-content').value = "Erro ao buscar a publicação.";
             });
         }
 
-        function fecharModalEditarPost() {
-            document.getElementById('modal-editar-post').style.display = 'none';
-        }
-
         function salvarEdicaoPost() {
             const postId = document.getElementById('edit-post-id').value;
             const novoConteudo = document.getElementById('edit-post-content').value.trim();
+            const sagaId = document.getElementById('edit-post-saga').value;
 
             if (!novoConteudo) {
                 showToast("O post não pode ficar vazio!", "warning");
                 return;
             }
 
+            const bodyData = { content: novoConteudo };
+            if (sagaId) {
+                bodyData.saga = sagaId;
+                bodyData.chapter_title = document.getElementById('edit-post-chapter-title').value.trim();
+            } else {
+                bodyData.saga = null;
+                bodyData.chapter_title = ""; // Remove o post da saga se marcar "Avulso"
+            }
+
             apiFetch(`${API_POSTS}${postId}/`, {
                 method: 'PATCH',
                 headers: headersAuth,
-                body: JSON.stringify({ content: novoConteudo })
+                body: JSON.stringify(bodyData)
             })
             .then(res => {
                 if (res.ok) {
@@ -1073,6 +1144,11 @@
                     carregarPosts(abaAtualContexto === 'global'); 
                     if (document.getElementById('modal-perfil-publico').style.display === 'flex') {
                         abrirPerfilPublico(personagemAtivo.id);
+                    }
+                    
+                    // 🔥 ATUALIZA O LEITOR AUTOMATICAMENTE SE ELE ESTIVER ABERTO! 🔥
+                    if (document.getElementById('modal-ler-saga').style.display === 'flex' && sagaAtivaId) {
+                        abrirLeitorSaga(sagaAtivaId, sagaAtivaTitle, sagaAtivaDesc);
                     }
                 }
             }).catch(e => {});
@@ -1823,6 +1899,10 @@
         let chatTargetId = null; 
         let enviandoMensagemChat = false;
 
+        let sagaAtivaId = null;
+        let sagaAtivaTitle = '';
+        let sagaAtivaDesc = '';
+
         function formatarUrlImagem(url) {
             if (!url) return 'https://via.placeholder.com/150/161616/888888?text=Avatar';
             return url.startsWith('http') ? url : window.location.origin + url;
@@ -2064,6 +2144,69 @@
             }).catch(err => {});
         }
 
+        function abrirLeitorSaga(sagaId, title, desc) {
+            sagaAtivaId = sagaId;
+            sagaAtivaTitle = title;
+            sagaAtivaDesc = desc;
+
+            document.getElementById('ler-saga-titulo').innerText = '📖 ' + title;
+            document.getElementById('ler-saga-desc').innerText = desc || 'Saga Narrativa';
+            document.getElementById('ler-saga-posts').innerHTML = '<p class="text-center text-gray-500 py-10">Puxando arquivos da saga...</p>';
+            document.getElementById('modal-ler-saga').style.display = 'flex';
+
+            apiFetch(`${API_POSTS}?saga_id=${sagaId}`, { headers: headersAuth })
+            .then(res => res.json())
+            .then(data => {
+                const posts = Array.isArray(data) ? data : (data.results || []);
+                if (posts.length === 0) {
+                    document.getElementById('ler-saga-posts').innerHTML = '<p class="text-center text-gray-500 py-10">Nenhum capítulo escrito ainda nesta saga.</p>';
+                    return;
+                }
+
+                let html = '';
+                posts.forEach((p, index) => {
+                    const dataFormatada = new Date(p.created_at).toLocaleString('pt-BR'); 
+                    let midiaHtml = p.image ? `<img src="${formatarUrlImagem(p.image)}" class="w-full h-auto max-h-[500px] object-cover rounded-xl mt-3 border border-vkborder">` : ''; 
+                    let sEmbed = '';
+                    if (p.spotify_track_url) { let tId = p.spotify_track_url.includes('track/') ? p.spotify_track_url.split('track/')[1].split('?')[0].split('/')[0] : p.spotify_track_url; sEmbed = `<iframe src="https://open.spotify.com/embed/track/${tId}?utm_source=generator&theme=0" width="100%" height="80" frameBorder="0" class="rounded-xl mt-4 shadow-sm border border-vkborder" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`; }
+                    const postFont = p.font_style || 'sans-serif';
+                    
+                    let tituloDisplay = p.chapter_title ? escaparHtml(p.chapter_title) : `Capítulo ${index + 1}`;
+                    
+                    const isAuthor = p.author === personagemAtivo?.id;
+                    const btnEditarPost = isAuthor ? `<button class="hover:text-blue-400 text-gray-500 transition text-xs ml-3" title="Editar Capítulo" onclick="abrirModalEditarPost(${p.id})">✏️</button>` : ``;
+                    const btnApagarPost = isAuthor ? `<button class="hover:text-red-400 text-gray-500 transition ml-3" title="Apagar Capítulo" onclick="apagarPost(${p.id}); fecharLeitorSaga();">🗑️</button>` : ``;
+
+                    html += `
+                    <div class="mb-8">
+                        <h4 class="font-bold text-sm mb-2 border-b border-vkborder pb-1" style="color: var(--theme-color);">📜 ${tituloDisplay}</h4>
+                        <div class="bg-vkcard rounded-xl p-4 sm:p-6 border border-vkborder shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <img src="${formatarUrlImagem(p.author_avatar)}" class="w-10 h-10 rounded-full object-cover">
+                                    <div class="overflow-hidden">
+                                        <strong class="text-[13.5px] text-vkpurple block leading-tight truncate w-full">${escaparHtml(p.author_name)}</strong>
+                                        <span class="text-[11px] text-gray-500">${dataFormatada}</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center">${btnEditarPost}${btnApagarPost}</div>
+                            </div>
+                            <div class="text-[13.5px] text-[#d1d5db] leading-relaxed whitespace-pre-wrap break-words" style="font-family: ${escaparHtml(postFont)};">${formatarTextoRP(p.content)}</div>
+                            ${midiaHtml} ${sEmbed}
+                        </div>
+                    </div>`;
+                });
+                document.getElementById('ler-saga-posts').innerHTML = html;
+            }).catch(e => {
+                document.getElementById('ler-saga-posts').innerHTML = '<p class="text-center text-red-500 py-10">Erro ao carregar os capítulos.</p>';
+            });
+        }
+
+        function fecharLeitorSaga() {
+            document.getElementById('modal-ler-saga').style.display = 'none';
+            document.getElementById('ler-saga-posts').innerHTML = '';
+        }
+
         function inicializarAplicacao() {
             apiFetch(API_CHARACTERS + 'my_personas/', { headers: headersAuth }).then(res => { if(!res) return; return res.json(); }).then(data => {
                 if(!data) return;
@@ -2138,6 +2281,31 @@
                     </div>`;
             }
 
+            // Preenche o menu de seleção de Sagas na área de postagem!
+            const sagaSelect = document.getElementById('post-saga');
+            if (sagaSelect) {
+                let sagasOptions = `<option value="" class="bg-vkcard text-gray-400">📖 Avulso</option>`;
+                if (p.sagas && p.sagas.length > 0) {
+                    p.sagas.forEach(s => {
+                        sagasOptions += `<option value="${s.id}" class="bg-vkcard text-white">${escaparHtml(s.title)}</option>`;
+                    });
+                }
+                sagaSelect.innerHTML = sagasOptions;
+            }
+
+            // Mapeia e renderiza a lista de Sagas na tab do perfil!
+            const listaSagas = Array.isArray(p.sagas) ? p.sagas : [];
+            let sagasHtml = listaSagas.map(s => `
+                <div class="bg-[#111] border border-vkborder rounded-xl p-3 flex flex-col justify-between shadow-sm cursor-pointer hover:border-vkpurple transition" onclick="abrirLeitorSaga(${s.id}, '${escaparHtml(s.title).replace(/'/g, "\\'")}', '${escaparHtml(s.description || '').replace(/'/g, "\\'")}')">
+                    <div>
+                        <strong class="text-vkpurple text-[13px] block truncate">📖 ${escaparHtml(s.title)}</strong>
+                        <span class="text-gray-500 text-[11px] line-clamp-2 mt-1">${escaparHtml(s.description) || 'Saga de RP'}</span>
+                    </div>
+                </div>
+            `).join('');
+            if(sagasHtml === '') sagasHtml = '<p class="text-gray-500 text-[12px] col-span-2 text-center py-4 bg-[#111] rounded-xl border border-vkborder">Nenhuma saga escrita ainda.</p>';
+            
+
             document.getElementById('perfil-personagem').style.display = 'block';
             document.getElementById('perfil-personagem').innerHTML = `
                 <div class="bg-vkcard rounded-xl overflow-hidden border border-vkborder shadow-sm mb-4">
@@ -2178,6 +2346,16 @@
                         </div>
                         
                         ${spotifyHtml}
+
+                        <hr class="border-vkborder my-6">
+
+                        <div class="flex items-center justify-between mb-4">
+                            <h4 class="font-bold text-white text-[14px] flex items-center gap-2">📖 Minhas Sagas</h4>
+                            <button onclick="document.getElementById('modal-nova-saga').style.display='flex'" class="text-[11px] bg-white/5 hover:bg-white/10 text-white px-2.5 py-1.5 rounded-md border border-vkborder transition font-medium">➕ Nova Saga</button>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2">
+                            ${sagasHtml}
+                        </div>
                     </div>
                 </div>`;
             document.getElementById('area-config').style.display = 'block'; document.getElementById('area-postagem').style.display = 'flex';
@@ -2216,7 +2394,11 @@
                 if(res && res.ok) {
                     showToast("📖 Nova Saga iniciada com sucesso!");
                     document.getElementById('modal-nova-saga').style.display = 'none';
-                    abrirPerfilPublico(personagemAtivo.id);
+                    // Recarrega o personagem para puxar a nova saga nos menus dropdown
+                    trocarPersonagemAtivo(personagemAtivo.id); 
+                    if (document.getElementById('modal-perfil-publico').style.display === 'flex') {
+                        abrirPerfilPublico(personagemAtivo.id);
+                    }
                 }
             }).catch(e => {});
         }
@@ -2273,12 +2455,14 @@
 
                 const listaSagas = Array.isArray(p.sagas) ? p.sagas : [];
                 let sagasHtml = listaSagas.map(s => `
-                    <div class="bg-[#111] border border-vkborder rounded-xl overflow-hidden shadow-sm cursor-pointer hover:border-vkpurple transition p-3">
-                        <strong class="text-vkpurple text-[13px] block truncate">${escaparHtml(s.title)}</strong>
-                        <span class="text-gray-500 text-[11px]">Saga de RP</span>
+                    <div class="bg-[#111] border border-vkborder rounded-xl p-3 flex flex-col justify-between shadow-sm cursor-pointer hover:border-vkpurple transition" onclick="abrirLeitorSaga(${s.id}, '${escaparHtml(s.title).replace(/'/g, "\\'")}', '${escaparHtml(s.description || '').replace(/'/g, "\\'")}')">
+                        <div>
+                            <strong class="text-vkpurple text-[13px] block truncate">📖 ${escaparHtml(s.title)}</strong>
+                            <span class="text-gray-500 text-[11px] line-clamp-2 mt-1">${escaparHtml(s.description) || 'Saga de RP'}</span>
+                        </div>
                     </div>
                 `).join('');
-                if(sagasHtml === '') sagasHtml = '<p class="text-gray-500 text-[12px] col-span-2 text-center py-4">Nenhuma saga escrita ainda.</p>';
+                if(sagasHtml === '') sagasHtml = '<p class="text-gray-500 text-[12px] col-span-2 text-center py-4 bg-[#111] rounded-xl border border-vkborder">Nenhuma saga escrita ainda.</p>';
 
                 let postsHtml = posts.length === 0 ? `<p class="text-center text-gray-500 text-[13px] py-6">Sem publicações.</p>` : posts.map(pItem => {
                     let midiaHtml = pItem.image ? `<img src="${formatarUrlImagem(pItem.image)}" class="w-full h-auto max-h-[400px] object-cover rounded-xl mt-3 border border-vkborder">` : ''; 
@@ -2300,7 +2484,7 @@
                             <img src="${formatarUrlImagem(p.avatar)}" class="w-10 h-10 rounded-full object-cover ${effectClass}">
                             <div class="flex-1 overflow-hidden">
                                 <strong class="text-[13px] text-vkpurple flex items-center gap-1">${escaparHtml(p.name)} ${getAlphaBadge(p.is_alpha_tester, p.show_alpha_badge)} ${badgeVip}</strong>
-                                <span class="text-xs text-gray-500">@${escaparHtml(p.player_username || 'usuario')} • ${new Date(pItem.created_at).toLocaleString('pt-BR')}</span>
+                                <span class="text-xs text-gray-500">@${escaparHtml(p.author_username || 'usuario')} • ${new Date(pItem.created_at).toLocaleString('pt-BR')}</span>
                             </div>
                             <div class="flex items-center">${btnPinPost}${btnEditarPost}${btnApagarPost}</div>
                         </div>
@@ -2348,6 +2532,7 @@
 
                             <hr class="border-vkborder my-6">
 
+                            <!-- ABAS: POSTS VS SAGAS -->
                             <div class="flex gap-4 border-b border-vkborder mb-4">
                                 <button class="pb-2 font-bold text-vkpurple border-b-2 border-vkpurple transition" id="tab-posts" onclick="mudarAbaPerfil('posts')">📜 Diário</button>
                                 <button class="pb-2 font-bold text-gray-500 hover:text-gray-300 transition" id="tab-sagas" onclick="mudarAbaPerfil('sagas')">📖 Sagas</button>
@@ -2442,6 +2627,7 @@
                             <div class="text-[13.5px] text-[#d1d5db] leading-relaxed whitespace-pre-wrap break-words" style="font-family: ${escaparHtml(postFont)};">${formatarTextoRP(p.content)}</div>
                             ${midiaHtml} ${sEmbed}
                             
+                            <!-- BARRA DE REAÇÕES MULTIPLAS E AÇÕES -->
                             <div class="flex items-center gap-2 flex-wrap mt-4 pt-3 border-t border-vkborder" id="reactions-container-${p.id}">
                                 ${reaçõesHtml}
                                 ${botoesAcaoPost}
@@ -2546,61 +2732,6 @@
         }
         function selecionarMusicaPost(trackId, trackName, artistName) { musicaPostAtual = "https://open.spotify.com/track/" + trackId; document.getElementById('resultados-spotify-post').innerHTML = ''; document.getElementById('input-busca-spotify-post').value = ''; document.getElementById('container-busca-spotify-post').classList.add('hidden'); document.getElementById('musica-selecionada-post').innerHTML = `🎵 ${escaparHtml(trackName)} - ${escaparHtml(artistName)} <span class="cursor-pointer text-red-400 ml-2 font-normal" onclick="removerMusicaPost()">[×]</span>`; }
         function removerMusicaPost() { musicaPostAtual = ""; document.getElementById('musica-selecionada-post').innerHTML = ''; }
-
-        function enviarPost() {
-            let conteudo = document.getElementById('texto-post').value; 
-            if (!conteudo && !window.fotoCortadaBlob && !musicaPostAtual) {
-                showToast("Escreva algo ou anexe uma mídia para publicar!", "warning");
-                return;
-            }
-            
-            conteudo = processarRoll(conteudo);
-
-            const fd = new FormData(); 
-            fd.append('author', personagemAtivo.id); 
-            fd.append('content', conteudo || ''); 
-            
-            if (window.fotoCortadaBlob) {
-                fd.append('image', window.fotoCortadaBlob, 'post_image.jpg');
-                window.fotoCortadaBlob = null;
-            }
-            if (musicaPostAtual) fd.append('spotify_track_url', musicaPostAtual);
-            
-            const font = document.getElementById('post-font').value;
-            if (font) fd.append('font_style', font);
-
-            const statusEl = document.getElementById('status-post'); 
-            statusEl.innerText = "Sincronizando..."; 
-            statusEl.style.color = "#888";
-            
-            apiFetch(API_POSTS, { method: 'POST', headers: headersUpload, body: fd })
-            .then(async res => {
-                if (!res) {
-                    statusEl.innerText = "";
-                    return; // Caiu no erro 429 ou 500 do wrapper apiFetch
-                }
-
-                if (res.ok) { 
-                    document.getElementById('texto-post').value = ""; 
-                    removerMusicaPost(); 
-                    statusEl.innerText = ""; 
-                    showToast("Publicado com sucesso no Multiverso!");
-                    carregarPosts(abaAtualContexto === 'global'); 
-                } 
-                else { 
-                    const err = await res.json();
-                    let erroMsg = "Erro desconhecido.";
-                    if(err.content) erroMsg = "Texto: " + err.content[0];
-                    else if(err.image) erroMsg = "Imagem: " + err.image[0];
-                    else if(err.detail) erroMsg = err.detail;
-                    
-                    statusEl.innerText = "⚠️ " + erroMsg; 
-                    statusEl.style.color = "#cf6679"; 
-                }
-            }).catch(e => {
-                statusEl.innerText = "";
-            });
-        }
 
         function abrirModalDoacao(valor = null, moedas = null) {
             if(valor && moedas) {

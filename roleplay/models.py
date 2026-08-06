@@ -68,7 +68,7 @@ class Post(models.Model):
     # ➕ ADICIONE ESTA LINHA:
     font_style = models.CharField(max_length=50, default='sans-serif', blank=True, null=True)
     saga = models.ForeignKey('Saga', on_delete=models.SET_NULL, null=True, blank=True, related_name='posts')
-
+    chapter_title = models.CharField(max_length=255, blank=True, null=True) # <-- ADICIONE ESTA LINHA
     def __str__(self):
         return f"Post de {self.author.name}"
 

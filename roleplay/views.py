@@ -144,19 +144,29 @@ class PostViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    # 👇 SUBSTITUA ESSA FUNÇÃO INTEIRA 👇
     def get_queryset(self):
-        queryset = Post.objects.all().order_by('-created_at')
+        queryset = Post.objects.all()
         author_id = self.request.query_params.get('author_id')
         persona_id = self.request.query_params.get('persona_id')
+        saga_id = self.request.query_params.get('saga_id') # Capta o pedido de saga
         
+        # Se for para ler uma saga, ordena do mais antigo para o mais novo (Capítulos)
+        if saga_id:
+            queryset = queryset.filter(saga_id=saga_id).order_by('created_at')
+        else:
+            # Feed normal: ordena do mais novo para o mais antigo
+            queryset = queryset.order_by('-created_at')
+            
         if author_id:
             queryset = queryset.filter(author__id=author_id)
-        elif persona_id:
+        elif persona_id and not saga_id:
             try:
                 persona = Character.objects.get(id=persona_id, player=self.request.user)
                 muted_ids = persona.muted_characters.values_list('id', flat=True)
                 queryset = queryset.exclude(author__id__in=muted_ids)
             except Character.DoesNotExist: pass
+            
         return queryset
 
     @action(detail=True, methods=['post'])

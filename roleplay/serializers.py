@@ -84,7 +84,7 @@ class PostSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'author', 'author_name', 'author_username', 'author_avatar', 
             'author_is_alpha_tester', 'author_show_alpha_badge',
-            'content', 'image', 'spotify_track_url', 'font_style', 'saga', 
+            'content', 'image', 'spotify_track_url', 'font_style', 'saga','chapter_title',
             'likes', 'total_likes', 'comments', 'reactions', 'created_at'
         ]
 
