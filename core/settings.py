@@ -56,7 +56,7 @@ ROOT_URLCONF = 'core.urls'
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.DjangoTemplates',
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [BASE_DIR / 'templates'], 
         'APP_DIRS': True,
         'OPTIONS': {
@@ -104,6 +104,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [
+    BASE_DIR / 'static',
+]
+
+# Configuração de Arquivos de Mídia (Uploads de usuários/personagens)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Modelo de Usuário Customizado
 AUTH_USER_MODEL = 'roleplay.Player'
@@ -115,16 +122,24 @@ CORS_ALLOW_ALL_ORIGINS = True
 SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID', '')
 SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET', '')
 
-# Configuração de Arquivos de Mídia (Uploads de usuários/personagens)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# Configuração do Django Rest Framework (DRF)
+# Configuração do Django Rest Framework (DRF) + Proteção contra Spam
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
+    # SISTEMA DE THROTTLING (Anti-Spam / Rate Limiting)
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '50/day',     # Limite para IPs não logados (bloqueia bots)
+        'user': '30/minute',  # Limite para usuários logados (bloqueia flood no feed e chat)
+    }
 }
+
+# Configuração de E-mail para a fase de testes (aparece no terminal)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

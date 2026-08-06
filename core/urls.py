@@ -27,6 +27,8 @@ urlpatterns = [
     # Rotas para as páginas HTML (templates)
     path('', TemplateView.as_view(template_name='index.html')),
     path('login.html', TemplateView.as_view(template_name='login.html')),
+    # Adicione ESTA LINHA abaixo para ativar o "Esqueci a Senha"
+    path('contas/', include('django.contrib.auth.urls')),
 ]
 
 # Libera o acesso às imagens locais via URL

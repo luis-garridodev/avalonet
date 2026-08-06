@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAKELAND BETA - Interface Style VK</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Paleta de Cores inspirada no VK Dark Mode, mas com a aura do FAKELAND */
+        :root {
+            --vk-bg: #000000;
+            --vk-card: #19191a;
+            --vk-border: #2b2b2b;
+            --vk-text: #e1e3e6;
+            --vk-muted: #818c99;
+            --fk-purple: #8b5cf6;
+            --fk-purple-hover: #7c3aed;
+        }
+        body { background-color: var(--vk-bg); color: var(--vk-text); font-family: -apple-system, BlinkMacSystemFont, 'Roboto', 'Segoe UI', sans-serif; }
+        .vk-card { background-color: var(--vk-card); border: 1px solid var(--vk-border); border-radius: 12px; }
+        .vk-input { background-color: #2a2a2b; border: 1px solid transparent; color: white; }
+        .vk-input:focus { border-color: var(--vk-muted); outline: none; }
+        .hover-bg:hover { background-color: rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col">
+
+    <!-- TOPBAR VK STYLE (Fina e Fixa) -->
+    <header class="bg-[#19191a] border-b border-[#2b2b2b] sticky top-0 z-50 h-12 flex items-center">
+        <div class="max-w-[1100px] mx-auto w-full px-4 flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <h1 class="font-black text-lg text-[#8b5cf6] tracking-wide cursor-pointer">FAKELAND</h1>
+                <div class="hidden md:flex items-center bg-[#2a2a2b] rounded-lg px-3 py-1 w-64">
+                    <span class="text-[#818c99] text-sm mr-2">🔍</span>
+                    <input type="text" placeholder="Pesquisar" class="bg-transparent w-full text-sm outline-none text-white placeholder-[#818c99]">
+                </div>
+            </div>
+            <div class="flex items-center gap-4 text-[#818c99]">
+                <button class="hover:text-white transition">🔔</button>
+                <button class="hover:text-white transition">🎵</button>
+                <img src="https://via.placeholder.com/150/8b5cf6/ffffff?text=V" class="w-7 h-7 rounded-full object-cover cursor-pointer border border-[#2b2b2b]">
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTAINER PRINCIPAL (Grid de 3 Colunas Estilo VK Desktop) -->
+    <main class="max-w-[1100px] mx-auto w-full px-4 py-4 grid grid-cols-1 md:grid-cols-12 gap-4">
+
+        <!-- COLUNA 1: MENU LATERAL ESQUERDO (Fixa no Desktop) -->
+        <aside class="hidden md:block col-span-2 sticky top-16 h-max">
+            <nav class="flex flex-col gap-0.5 text-sm font-medium text-[#e1e3e6]">
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover-bg transition"><span class="text-[#8b5cf6]">👤</span> Meu perfil</a>
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover-bg transition"><span class="text-[#818c99]">📰</span> Notícias</a>
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover-bg transition"><span class="text-[#818c99]">💬</span> Mensagens</a>
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover-bg transition"><span class="text-[#818c99]">👥</span> Amigos</a>
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover-bg transition"><span class="text-[#818c99]">🎵</span> Músicas</a>
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover-bg transition"><span class="text-[#818c99]">📷</span> Fotos</a>
+            </nav>
+        </aside>
+
+        <!-- COLUNA 2: CONTEÚDO PRINCIPAL (Perfil, Caixas Modulares e Feed) -->
+        <section class="col-span-1 md:col-span-7 space-y-4">
+            
+            <!-- HEADER DO PERFIL -->
+            <div class="vk-card overflow-hidden">
+                <div class="h-48 bg-cover bg-center relative" style="background-image: url('https://via.placeholder.com/800x400/2a2a2b/8b5cf6?text=Capa+da+Verossika');">
+                    <!-- Botão de editar capa sutil -->
+                    <button class="absolute top-3 right-3 bg-black/50 hover:bg-black/70 backdrop-blur text-white p-1.5 rounded-lg text-xs transition">📷 Alterar capa</button>
+                </div>
+                
+                <div class="px-5 relative pb-5">
+                    <!-- Avatar subindo a capa (Clássico) -->
+                    <div class="absolute -top-16 left-5">
+                        <img src="https://via.placeholder.com/150/19191a/8b5cf6?text=Avatar" class="w-32 h-32 rounded-full border-4 border-[#19191a] object-cover bg-[#19191a]">
+                        <div class="absolute bottom-2 right-2 w-4 h-4 bg-green-500 border-2 border-[#19191a] rounded-full"></div> <!-- Bolinha de Online -->
+                    </div>
+
+                    <!-- Botão de Ação Larga (Estilo VK) -->
+                    <div class="flex justify-end pt-3">
+                        <button class="bg-[#2a2a2b] hover:bg-[#333333] text-white px-4 py-1.5 rounded-lg text-sm font-medium transition">Editar perfil</button>
+                    </div>
+
+                    <!-- Informações Pessoais -->
+                    <div class="mt-4">
+                        <div class="flex items-baseline gap-2">
+                            <h2 class="text-2xl font-bold text-white">Verossika Mayday</h2>
+                            <span class="text-[#818c99] text-xs">online</span>
+                        </div>
+                        <!-- Status do VK -->
+                        <p class="text-[13px] text-white mt-1 cursor-pointer hover:underline decoration-[#818c99]">Vivendo de royalties e lágrimas de corações partidos. 🍷</p>
+                        
+                        <hr class="border-[#2b2b2b] my-4">
+
+                        <!-- Tabela de Informações (Grade VK) -->
+                        <div class="grid grid-cols-3 gap-y-2 text-[13px]">
+                            <div class="col-span-1 text-[#818c99]">Raça:</div>
+                            <div class="col-span-2 text-[#8b5cf6] hover:underline cursor-pointer">Succubus</div>
+                            
+                            <div class="col-span-1 text-[#818c99]">Localização:</div>
+                            <div class="col-span-2 text-white">Pentagram City, Anel do Orgulho</div>
+                            
+                            <div class="col-span-1 text-[#818c99]">Idade:</div>
+                            <div class="col-span-2 text-white">Desconhecida</div>
+                        </div>
+
+                        <!-- Botão "Mostrar informações detalhadas" -->
+                        <div class="mt-3 text-center">
+                            <button class="text-[#8b5cf6] hover:underline text-[13px]">Mostrar informações detalhadas</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLOCO MODULAR: FOTOS (Super comum no VK) -->
+            <div class="vk-card p-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-medium text-white hover:underline cursor-pointer">Fotos <span class="text-[#818c99] ml-1">142</span></h3>
+                </div>
+                <div class="flex gap-2 overflow-x-hidden">
+                    <img src="https://via.placeholder.com/150/2a2a2b" class="w-1/4 aspect-square object-cover rounded cursor-pointer hover:opacity-80 transition">
+                    <img src="https://via.placeholder.com/150/2a2a2b" class="w-1/4 aspect-square object-cover rounded cursor-pointer hover:opacity-80 transition">
+                    <img src="https://via.placeholder.com/150/2a2a2b" class="w-1/4 aspect-square object-cover rounded cursor-pointer hover:opacity-80 transition">
+                    <img src="https://via.placeholder.com/150/2a2a2b" class="w-1/4 aspect-square object-cover rounded cursor-pointer hover:opacity-80 transition">
+                </div>
+            </div>
+
+            <!-- BLOCO MODULAR: MÚSICAS -->
+            <div class="vk-card p-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-medium text-white hover:underline cursor-pointer">Áudios <span class="text-[#818c99] ml-1">8</span></h3>
+                    <button class="text-[#818c99] hover:text-white text-xs">➕ Adicionar</button>
+                </div>
+                <div class="space-y-2">
+                    <!-- Simulação de Player Nivel VK -->
+                    <div class="flex items-center gap-3 group cursor-pointer hover-bg p-1 -ml-1 rounded transition">
+                        <div class="w-10 h-10 bg-[#2a2a2b] rounded flex items-center justify-center text-white text-lg">▶️</div>
+                        <div class="flex-1 overflow-hidden">
+                            <div class="text-[13px] text-white truncate"><strong class="text-[#8b5cf6]">Verossika Mayday</strong> – Monster</div>
+                            <div class="text-[11px] text-[#818c99]">3:24</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAIXA DE POSTAGEM -->
+            <div class="vk-card p-4 flex gap-3 items-center">
+                <img src="https://via.placeholder.com/150/19191a/8b5cf6?text=V" class="w-8 h-8 rounded-full object-cover border border-[#2b2b2b]">
+                <input type="text" placeholder="O que há de novo?" class="vk-input w-full rounded-md px-3 py-1.5 text-[13px] transition">
+                <div class="flex gap-2 text-[#818c99]">
+                    <button class="hover:text-white transition">📷</button>
+                    <button class="hover:text-white transition">🎵</button>
+                </div>
+            </div>
+
+            <!-- O "TEXTO ENORME" NO FEED (A BÍBLIA DE RP) -->
+            <article class="vk-card">
+                <!-- Cabeçalho do Post -->
+                <div class="p-4 flex justify-between items-start">
+                    <div class="flex gap-3 items-center">
+                        <img src="https://via.placeholder.com/150/19191a/8b5cf6?text=V" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <strong class="text-[13px] text-[#8b5cf6] hover:underline cursor-pointer block leading-tight">Verossika Mayday</strong>
+                            <span class="text-[12px] text-[#818c99] hover:underline cursor-pointer">Ontem às 23:45</span>
+                        </div>
+                    </div>
+                    <button class="text-[#818c99] hover:text-white transition px-1">•••</button>
+                </div>
+                
+                <!-- Conteúdo do Post (Bíblia de Turno) -->
+                <div class="px-4 pb-2 text-[14px] leading-relaxed text-[#e1e3e6] space-y-4">
+                    <p>O som ensurdecedor da multidão batia contra as paredes do camarim muito antes de eu sequer colocar os pés no palco. Pentagram City sempre teve esse cheiro característico: uma mistura letal de ozônio, desespero e luxúria mal disfarçada. Eu amava isso.</p>
+                    
+                    <p>Encarei o espelho com a moldura de luzes ofuscantes. O reflexo devolvia o sorriso predatório de quem sabia exatamente o poder que exercia. Minhas unhas, afiadas como lâminas esculpidas em ébano, traçaram a linha do meu maxilar enquanto eu ajeitava a gargantilha de espinhos que brilhava com magia profana. <em>"Showtime, vadias,"</em> murmurei para o vidro vazio.</p>
+
+                    <p>Quando as cortinas finalmente se abriram, a onda de gritos foi física. Era um oceano de demônios, impuros e almas penadas se espremendo só para pegar um vislumbre. A fumaça rosa subiu pelo chão do palco no momento exato em que a batida pesada do baixo ecoou, fazendo o próprio chão do Inferno vibrar. Peguei o microfone como se fosse o coração de um deles.</p>
+
+                    <p>— Sentiram minha falta?! — Minha voz ressoou, amplificada, distorcida e carregada daquela energia súcuba que fazia até os Overlords mais rígidos prenderem a respiração. A resposta foi um urro caótico e em uníssono.</p>
+
+                    <p>Girei nos calcanhares, a cauda estalando no ar como um chicote invisível, e comecei a cantar. Não era apenas música. Era dominação pura. Durante três horas, aquela boate não pertencia a Lucifer. Pertencia a mim.</p>
+
+                    <p>Agora, sentada na traseira da limusine flutuando de volta para casa, com uma garrafa de vinho caro na mão, o silêncio parece ensurdecedor. Alguém vivo pra um after? Ou os anéis do inferno deitaram cedo hoje? 🍷✨</p>
+                </div>
+
+                <!-- Barra de Interações Estilo VK (Minimalista, com ícones de linha) -->
+                <div class="px-4 py-3 flex items-center justify-between border-t border-[#2b2b2b] mt-2">
+                    <div class="flex gap-4">
+                        <!-- Curtir -->
+                        <button class="flex items-center gap-1.5 text-[#818c99] hover:bg-[#2a2a2b] px-2 py-1 rounded-md transition group">
+                            <svg class="w-5 h-5 group-hover:text-red-500 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            <span class="text-[13px] font-medium group-hover:text-red-500 transition">1.2K</span>
+                        </button>
+                        <!-- Comentar -->
+                        <button class="flex items-center gap-1.5 text-[#818c99] hover:bg-[#2a2a2b] px-2 py-1 rounded-md transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                            <span class="text-[13px] font-medium">450</span>
+                        </button>
+                        <!-- Compartilhar -->
+                        <button class="flex items-center gap-1.5 text-[#818c99] hover:bg-[#2a2a2b] px-2 py-1 rounded-md transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
+                            <span class="text-[13px] font-medium">21</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Views (O famosíssimo olhinho do VK) -->
+                    <div class="flex items-center gap-1.5 text-[#818c99]">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        <span class="text-[12px]">5.4K</span>
+                    </div>
+                </div>
+            </article>
+        </section>
+
+        <!-- COLUNA 3: WIDGETS DIRETOS (Fixa no Desktop) -->
+        <aside class="hidden md:block col-span-3 space-y-4">
+            
+            <div class="vk-card p-4">
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-sm font-medium text-white hover:underline cursor-pointer">Seguidores <span class="text-[#818c99] ml-1">12K</span></h3>
+                </div>
+                <div class="grid grid-cols-3 gap-2 text-center">
+                    <div class="cursor-pointer">
+                        <img src="https://via.placeholder.com/150/2a2a2b/8b5cf6?text=B" class="w-12 h-12 rounded-full mx-auto object-cover hover:opacity-80">
+                        <div class="text-[11px] text-[#8b5cf6] mt-1 truncate">Blitzø</div>
+                    </div>
+                    <div class="cursor-pointer">
+                        <img src="https://via.placeholder.com/150/2a2a2b/8b5cf6?text=S" class="w-12 h-12 rounded-full mx-auto object-cover hover:opacity-80">
+                        <div class="text-[11px] text-[#8b5cf6] mt-1 truncate">Stolas</div>
+                    </div>
+                    <div class="cursor-pointer">
+                        <img src="https://via.placeholder.com/150/2a2a2b/8b5cf6?text=L" class="w-12 h-12 rounded-full mx-auto object-cover hover:opacity-80">
+                        <div class="text-[11px] text-[#8b5cf6] mt-1 truncate">Loona</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center text-[#818c99] text-[12px] space-y-1 mt-4">
+                <p>FAKELAND © 2026</p>
+                <div class="flex justify-center gap-3">
+                    <a href="#" class="hover:underline">Termos</a>
+                    <a href="#" class="hover:underline">Privacidade</a>
+                    <a href="#" class="hover:underline">Desenvolvedor</a>
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+</body>
+</html>

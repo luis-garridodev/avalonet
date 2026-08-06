@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAKELAND - Perfil VK Style</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        vkbg: '#000000',       /* Fundo principal 100% escuro do seu print */
+                        vkcard: '#161616',     /* Cinza chumbo escuro dos cartões */
+                        vkborder: '#242424',   /* Bordas sutis */
+                        vkpurple: '#a855f7',   /* O roxo neon da Verossika/Logo */
+                        vktext: '#d1d5db',     /* Texto secundário (gray-300) */
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: theme('colors.vkbg'); color: #f3f4f6; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col no-scrollbar">
+
+    <!-- ================= NAVBAR SUPERIOR FIXA ================= -->
+    <header class="bg-[#0a0a0a] border-b border-vkborder h-[50px] sticky top-0 z-50 flex items-center">
+        <div class="w-full max-w-[1000px] mx-auto px-4 flex items-center justify-between">
+            
+            <!-- Logo e Busca -->
+            <div class="flex items-center gap-6">
+                <h1 class="font-black text-xl tracking-wider text-vkpurple uppercase cursor-pointer">
+                    FAKELAND
+                </h1>
+                
+                <div class="hidden md:flex bg-[#1f1f1f] rounded-md items-center px-3 py-1.5 w-[240px]">
+                    <svg class="w-4 h-4 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                    <input type="text" placeholder="Pesquisar" class="bg-transparent w-full text-sm outline-none text-white placeholder-gray-500">
+                </div>
+            </div>
+
+            <!-- Ícones da Direita -->
+            <div class="flex items-center gap-4">
+                <button class="text-yellow-500 hover:text-yellow-400 transition">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M10 2a6 6 0 00-6 6v3.586l-.707.707A1 1 0 004 14h12a1 1 0 00.707-1.707L16 11.586V8a6 6 0 00-6-6zM10 18a3 3 0 01-3-3h6a3 3 0 01-3 3z"></path></svg>
+                </button>
+                <button class="text-vkpurple hover:opacity-80 transition">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+                </button>
+                <img src="https://via.placeholder.com/32" class="w-7 h-7 rounded-full bg-gray-800 cursor-pointer object-cover">
+            </div>
+        </div>
+    </header>
+
+    <!-- ================= ESTRUTURA DE 3 COLUNAS (O SEGREDO DO VK) ================= -->
+    <!-- max-w-[1000px] trava a largura perfeita no desktop para não esticar demais -->
+    <main class="w-full max-w-[1000px] mx-auto flex flex-col md:flex-row gap-4 pt-4 px-4 pb-10">
+
+        <!-- ================= COLUNA 1: MENU LATERAL ESQUERDO ================= -->
+        <aside class="hidden md:block w-[160px] shrink-0 sticky top-[70px] h-max">
+            <nav class="space-y-1 text-[13px] font-medium text-vktext">
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover:bg-white/5 hover:text-white transition group bg-white/5 text-white">
+                    <svg class="w-4 h-4 text-vkpurple" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path></svg>
+                    Meu perfil
+                </a>
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover:bg-white/5 hover:text-white transition group">
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M2 5a2 2 0 012-2h8a2 2 0 012 2v10a2 2 0 002 2H4a2 2 0 01-2-2V5zm3 1h6v4H5V6zm6 6H5v2h6v-2z" clip-rule="evenodd"></path></svg>
+                    Notícias
+                </a>
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover:bg-white/5 hover:text-white transition group">
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"></path></svg>
+                    Mensagens
+                </a>
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover:bg-white/5 hover:text-white transition group">
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition" fill="currentColor" viewBox="0 0 20 20"><path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"></path></svg>
+                    Amigos
+                </a>
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover:bg-white/5 hover:text-white transition group">
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg>
+                    Músicas
+                </a>
+                <a href="#" class="flex items-center gap-3 px-2 py-1.5 rounded-md hover:bg-white/5 hover:text-white transition group">
+                    <svg class="w-4 h-4 text-gray-400 group-hover:text-white transition" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.414-1.414A1 1 0 0011.586 3H8.414a1 1 0 00-.707.293L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg>
+                    Fotos
+                </a>
+            </nav>
+        </aside>
+
+        <!-- ================= COLUNA 2: CONTEÚDO CENTRAL (Perfil e Feed) ================= -->
+        <section class="flex-1 max-w-[550px] space-y-4">
+            
+            <!-- CAIXA 1: Cabeçalho do Perfil -->
+            <div class="bg-vkcard rounded-xl overflow-hidden border border-vkborder shadow-sm">
+                <!-- Capa -->
+                <div class="h-[200px] bg-gray-800 relative group">
+                    <!-- Botão de alterar capa (Visível no hover) -->
+                    <button class="absolute top-3 right-3 bg-black/60 hover:bg-black/80 text-white text-xs px-3 py-1.5 rounded-md flex items-center gap-1.5 transition opacity-0 group-hover:opacity-100 backdrop-blur-sm">
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.414-1.414A1 1 0 0011.586 3H8.414a1 1 0 00-.707.293L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z"></path></svg>
+                        Alterar capa
+                    </button>
+                </div>
+
+                <!-- Info do Perfil -->
+                <div class="px-5 pb-5 relative">
+                    <!-- Botão Editar Perfil à direita -->
+                    <div class="flex justify-end pt-3 mb-2">
+                        <button class="bg-white/10 hover:bg-white/20 text-white text-[13px] font-medium px-4 py-1.5 rounded-md transition">
+                            Editar perfil
+                        </button>
+                    </div>
+
+                    <!-- Avatar posicionado sobrepondo a borda da capa sutilmente (Estilo VK Clássico) -->
+                    <div class="absolute -top-12 left-5">
+                        <div class="relative">
+                            <img src="https://via.placeholder.com/100" class="w-[100px] h-[100px] rounded-full border-[3px] border-vkcard bg-gray-900 object-cover shadow-lg">
+                            <span class="absolute bottom-1 right-2 w-3.5 h-3.5 bg-green-500 border-2 border-vkcard rounded-full"></span>
+                        </div>
+                    </div>
+
+                    <!-- Nome e Status -->
+                    <div class="mt-2">
+                        <h1 class="text-xl font-bold text-white flex items-center gap-2">
+                            Verossika Mayday <span class="text-xs font-normal text-gray-500 mt-1">online</span>
+                        </h1>
+                        <p class="text-sm text-gray-300 mt-1">Vivendo de royalties e lágrimas de corações partidos. 🍷</p>
+                    </div>
+
+                    <hr class="border-vkborder my-4">
+
+                    <!-- Tabela de Informações -->
+                    <div class="space-y-2 text-[13px]">
+                        <div class="flex">
+                            <span class="w-[120px] text-gray-500">Raça:</span>
+                            <a href="#" class="text-vkpurple hover:underline">Succubus</a>
+                        </div>
+                        <div class="flex">
+                            <span class="w-[120px] text-gray-500">Localização:</span>
+                            <span class="text-gray-200">Pentagram City, Anel do Orgulho</span>
+                        </div>
+                        <div class="flex">
+                            <span class="w-[120px] text-gray-500">Idade:</span>
+                            <span class="text-gray-200">Desconhecida</span>
+                        </div>
+                        
+                        <div class="pt-3 text-center">
+                            <button class="text-vkpurple hover:underline text-[13px]">Mostrar informações detalhadas</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CAIXA 2: Bloco de Fotos -->
+            <div class="bg-vkcard rounded-xl p-5 border border-vkborder shadow-sm">
+                <a href="#" class="flex items-center gap-2 mb-3 group">
+                    <h3 class="text-sm font-semibold text-white group-hover:text-vkpurple transition">Fotos</h3>
+                    <span class="text-sm text-gray-500">142</span>
+                </a>
+                <div class="grid grid-cols-4 gap-2">
+                    <img src="https://via.placeholder.com/120" class="w-full aspect-square object-cover rounded-md bg-gray-800 cursor-pointer hover:opacity-80 transition">
+                    <img src="https://via.placeholder.com/120" class="w-full aspect-square object-cover rounded-md bg-gray-800 cursor-pointer hover:opacity-80 transition">
+                    <img src="https://via.placeholder.com/120" class="w-full aspect-square object-cover rounded-md bg-gray-800 cursor-pointer hover:opacity-80 transition">
+                    <img src="https://via.placeholder.com/120" class="w-full aspect-square object-cover rounded-md bg-gray-800 cursor-pointer hover:opacity-80 transition">
+                </div>
+            </div>
+
+            <!-- CAIXA 3: Criar Postagem (O que há de novo?) -->
+            <div class="bg-vkcard rounded-xl p-3 border border-vkborder shadow-sm flex items-center gap-3">
+                <img src="https://via.placeholder.com/32" class="w-8 h-8 rounded-full bg-gray-800">
+                <input type="text" placeholder="O que há de novo?" class="bg-transparent flex-1 text-sm outline-none text-white placeholder-gray-500">
+                <div class="flex items-center gap-2 text-gray-400">
+                    <button class="hover:text-white transition p-1"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M4 5a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2h-1.586a1 1 0 01-.707-.293l-1.414-1.414A1 1 0 0011.586 3H8.414a1 1 0 00-.707.293L6.293 4.707A1 1 0 015.586 5H4zm6 9a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"></path></svg></button>
+                    <button class="hover:text-white transition p-1"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z"></path></svg></button>
+                </div>
+            </div>
+
+            <!-- CAIXA 4: Exemplo de Postagem do Feed (Texto longo) -->
+            <div class="bg-vkcard rounded-xl p-5 border border-vkborder shadow-sm">
+                <!-- Header do Post -->
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <img src="https://via.placeholder.com/40" class="w-10 h-10 rounded-full bg-gray-800 object-cover cursor-pointer">
+                        <div>
+                            <strong class="text-[13px] text-vkpurple hover:underline cursor-pointer block leading-tight">Verossika Mayday</strong>
+                            <span class="text-xs text-gray-500">Ontem às 23:45</span>
+                        </div>
+                    </div>
+                    <button class="text-gray-500 hover:text-white tracking-widest px-2">•••</button>
+                </div>
+                
+                <!-- Corpo do Texto -->
+                <div class="text-[14px] text-[#d1d5db] leading-[1.6] space-y-4 font-sans">
+                    <p>O som ensurdecedor da multidão batia contra as paredes do camarim muito antes de eu sequer colocar os pés no palco. Pentagram City sempre teve esse cheiro característico: uma mistura letal de ozônio, desespero e luxúria mal disfarçada. Eu amava isso.</p>
+                    
+                    <p>Encarei o espelho com a moldura de luzes ofuscantes. O reflexo devolvia o sorriso predatório de quem sabia exatamente o poder que exercia. Minhas unhas, afiadas como lâminas esculpidas em ébano, traçaram a linha do meu maxilar enquanto eu ajeitava a gargantilha de espinhos que brilhava com magia profana. <em>"Showtime, vadias,"</em> murmurei para o vidro vazio.</p>
+                    
+                    <p>Quando as cortinas finalmente se abriram, a onda de gritos foi física. Era um oceano de demônios, impuros e almas penadas se espremendo só para pegar um vislumbre. A fumaça rosa subiu pelo chão do palco no momento exato em que a batida pesada do baixo ecoou, fazendo o próprio chão do Inferno vibrar. Peguei o microfone como se fosse o coração de um deles.</p>
+                    
+                    <p>— Sentiram minha falta?! — Minha voz ressoou, amplificada, distorcida e carregada daquela energia súcuba que fazia até os Overlords mais rígidos prenderem a respiração. A resposta foi um urro caótico e em uníssono.</p>
+                    
+                    <p>Girei nos calcanhares, a cauda estalando no ar como um chicote invisível, e comecei a cantar. Não era apenas música. Era dominação pura. Durante três horas, aquela boate não pertencia a Lucifer. Pertencia a mim.</p>
+                    
+                    <p>Agora, sentada na traseira da limusine flutuando de volta para casa, com uma garrafa de vinho caro na mão, o silêncio parece ensurdecedor. Alguém vivo pra um after? Ou os anéis do Inferno já dormiram?</p>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= COLUNA 3: WIDGETS DA DIREITA ================= -->
+        <aside class="hidden lg:block w-[220px] shrink-0 sticky top-[70px] h-max space-y-4">
+            
+            <!-- Widget: Seguidores -->
+            <div class="bg-vkcard rounded-xl p-4 border border-vkborder shadow-sm">
+                <a href="#" class="flex items-center gap-2 mb-3 group">
+                    <h3 class="text-sm font-semibold text-white group-hover:text-vkpurple transition">Seguidores</h3>
+                    <span class="text-sm text-gray-500">12K</span>
+                </a>
+                
+                <div class="flex justify-between">
+                    <!-- Seguidor 1 -->
+                    <div class="flex flex-col items-center gap-1 cursor-pointer group w-1/3">
+                        <img src="https://via.placeholder.com/48" class="w-12 h-12 rounded-full bg-gray-800 object-cover group-hover:opacity-80 transition">
+                        <span class="text-[11px] text-vkpurple group-hover:underline truncate w-full text-center">Blitzø</span>
+                    </div>
+                    <!-- Seguidor 2 -->
+                    <div class="flex flex-col items-center gap-1 cursor-pointer group w-1/3">
+                        <img src="https://via.placeholder.com/48" class="w-12 h-12 rounded-full bg-gray-800 object-cover group-hover:opacity-80 transition">
+                        <span class="text-[11px] text-vkpurple group-hover:underline truncate w-full text-center">Stolas</span>
+                    </div>
+                    <!-- Seguidor 3 -->
+                    <div class="flex flex-col items-center gap-1 cursor-pointer group w-1/3">
+                        <img src="https://via.placeholder.com/48" class="w-12 h-12 rounded-full bg-gray-800 object-cover group-hover:opacity-80 transition">
+                        <span class="text-[11px] text-vkpurple group-hover:underline truncate w-full text-center">Loona</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer / Copyright VK Style -->
+            <div class="text-center text-[12px] text-gray-500 space-y-1 pt-2">
+                <p>FAKELAND © 2026</p>
+                <div class="flex justify-center gap-2">
+                    <a href="#" class="hover:underline">Termos</a>
+                    <a href="#" class="hover:underline">Privacidade</a>
+                    <a href="#" class="hover:underline">Desenvolvedor</a>
+                </div>
+            </div>
+
+        </aside>
+
+    </main>
+
+</body>
+</html>
